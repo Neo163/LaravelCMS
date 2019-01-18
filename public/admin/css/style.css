@@ -1,0 +1,84 @@
+/* 电脑/平板设备屏幕，默认屏幕（大于等于 768px） */
+@media (min-width: 768px) {
+    .content-wrapper {
+        margin-top: 50px;
+    }
+}
+
+/* 手机屏幕（小于等于 767px） */
+@media (max-width: 768px) { 
+    .login-margin {
+        margin-top: 120px;
+    }
+    .content-wrapper {
+        margin-top: 100px !important;
+    }
+
+}
+
+section.content-header {
+    margin-bottom: 10px;
+}
+
+button.btn.btn-info.submit-button {
+    float: right;
+    margin-bottom: 10px;
+}
+
+label.submit-title {
+    margin-top: 10px;
+}
+
+header.main-header {
+    position: fixed;
+    width: 100%;
+}
+aside.main-sidebar {
+    position: fixed;
+}
+
+
+
+/*setting change password*/
+.input1 { 
+    border-color: #fff; 
+}
+.btn-default1 { 
+    background-color: #fff; 
+    color: #fff; 
+}
+.btn-default { 
+    background-color: #f4f4f4; 
+    color: #444; 
+}
+.input1::-webkit-input-placeholder { /* WebKit browsers */
+    color: #fff;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #fff;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #fff;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #fff;
+}
+.input { 
+    border-color: #d2d6de;
+}
+.input::-webkit-input-placeholder { /* WebKit browsers */
+    color: #B2B6BD;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #B2B6BD;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #B2B6BD;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #B2B6BD;
+}
+.btn-warning1 {
+    color: #fff;
+}
+/* /setting change password*/
