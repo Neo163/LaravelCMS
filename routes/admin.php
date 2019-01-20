@@ -35,13 +35,6 @@ Route::group(['prefix' => 'admin'], function(){
 		    Route::post('/permissions/store', '\App\Admin\Controllers\PermissionController@store');
 		});
 
-		Route::group(['middleware' => 'can:setting'], function(){
-			Route::get("/setting", "\App\Admin\Controllers\SettingController@index");
-		    Route::get("/setting/user/change_password", "\App\Admin\Controllers\SettingController@change_password");
-		});
-
-			
-
 		Route::group(['middleware' => 'can:post'], function(){
 			
 			// 文章列表
@@ -49,11 +42,16 @@ Route::group(['prefix' => 'admin'], function(){
 			// 创建文章
 			Route::get("/post/create", "\App\Admin\Controllers\PostController@create");
 			Route::post("/posts/list", "\App\Admin\Controllers\PostController@store");
+
+			Route::post("/post/image/upload", "\App\Admin\Controllers\PostController@imageUpload");
+
+			Route::post("/post/uploadcoverimage", "\App\Admin\Controllers\PostController@coverImage");
+			
 			// 文章详情页
 			Route::get("/post/{post}", "\App\Admin\Controllers\PostController@show");
 			// 编辑文章
 			Route::get("/post/{post}/edit", "\App\Admin\Controllers\PostController@edit");
-			Route::put("/post/{post}", "\App\Admin\Controllers\PostController@update");
+			Route::put("/post/{post}", "\App\Admin\Controllers\PostController@update"); 
 
 			Route::get('/posts/trashs/list', '\App\Admin\Controllers\PostController@trashs');
 			Route::get('/post/{post}/trash', '\App\Admin\Controllers\PostController@trash');
@@ -75,6 +73,51 @@ Route::group(['prefix' => 'admin'], function(){
 			// 审核模块
 			Route::get('/posts', '\App\Admin\Controllers\PostController@index');
 			Route::post('/posts/{post}/status', '\App\Admin\Controllers\PostController@status');
+		});
+
+		Route::group(['middleware' => 'can:page'], function(){
+			
+			// 文章列表
+			Route::get("/pages/list", "\App\Admin\Controllers\PageController@index");
+			// 创建文章
+			Route::get("/page/create", "\App\Admin\Controllers\PageController@create");
+			Route::post("/pages/list", "\App\Admin\Controllers\PageController@store");
+
+			Route::post("/page/image/upload", "\App\Admin\Controllers\PageController@imageUpload");
+
+			Route::post("/page/uploadcoverimage", "\App\Admin\Controllers\PageController@coverImage");
+			
+			// 文章详情页
+			Route::get("/page/{page}", "\App\Admin\Controllers\PageController@show");
+			// 编辑文章
+			Route::get("/page/{page}/edit", "\App\Admin\Controllers\PageController@edit");
+			Route::put("/page/{page}", "\App\Admin\Controllers\pageController@update"); 
+
+			Route::get('/pages/trashs/list', '\App\Admin\Controllers\PageController@trashs');
+			Route::get('/page/{page}/trash', '\App\Admin\Controllers\PageController@trash');
+			Route::get('/page/{page}/restore', '\App\Admin\Controllers\PageController@restore');
+			Route::get("/page/{page}/delete", "\App\Admin\Controllers\PageController@delete");
+
+			// 搜索
+			Route::get('/search_display_page_id', '\App\Admin\Controllers\PageController@search_display_page_id');
+			Route::get('/search_display_page_title', '\App\Admin\Controllers\PageController@search_display_page_title');
+			Route::get('/search_display_page_category', '\App\Admin\Controllers\PageController@search_display_page_category');
+			Route::get('/search_display_page_created_at', '\App\Admin\Controllers\PageController@search_display_page_created_at');
+
+			Route::get('/search_hide_page_id', '\App\Admin\Controllers\PageController@search_hide_page_id');
+			Route::get('/search_hide_page_title', '\App\Admin\Controllers\PageController@search_hide_page_title');
+			Route::get('/search_hide_page_category', '\App\Admin\Controllers\PageController@search_hide_page_category');
+			Route::get('/search_hide_page_created_at', '\App\Admin\Controllers\PageController@search_hide_page_created_at');
+
+		});
+
+		Route::group(['middleware' => 'can:setting'], function(){
+			Route::get("/setting", "\App\Admin\Controllers\SettingController@index");
+		    Route::get("/setting/user/change_password", "\App\Admin\Controllers\SettingController@change_password");
+		});
+
+		Route::group(['middleware' => 'can:statistics'], function(){
+			Route::get("/statistics", "\App\Admin\Controllers\StatisticsController@index");
 		});
 
 		Route::group(['middleware' => 'can:plan'], function(){

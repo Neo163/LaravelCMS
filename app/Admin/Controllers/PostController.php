@@ -4,16 +4,16 @@ namespace App\Admin\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Post;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    //列表
     public function index()
     {
         $posts = Post::where('recycle', '1')->orderBy('created_at', 'desc')->paginate(20);
     	return view("admin/post/index", compact('posts'));
     }
-
+    
     //详情页面
     public function show(Post $post)
     {  
@@ -27,18 +27,18 @@ class PostController extends Controller
     }
 
     //创建逻辑
-    public function store()
+    public function store() 
     {
         //验证：检查输入的资料
         $this->validate(request(),[
-            'title' => 'required|string|max:100|min:2',
+            'title' => 'required|string|max:200|min:1',
             // 'content' => 'required|string|min:5',
         ],[
             'title.min' => '文章标题过短',
         ]);
 
         //逻辑：提交数据到post表中
-        $post = Post::create(request(['title', 'content']));
+        $post = Post::create(request(['title', 'content', 'image']));
 
         //渲染：显示或者跳转
         return redirect("admin/posts/list");
@@ -51,7 +51,7 @@ class PostController extends Controller
     }
 
     //更新逻辑
-    public function update(Post $post)
+    public function update(Post $post, Request $request)
     {
         //验证
         $this->validate(request(),[
@@ -62,10 +62,48 @@ class PostController extends Controller
         //逻辑
         $post->title = request('title');
         $post->content = request('content');
+        $post->image = request('image');
         $post->save();
 
         //渲染
         return redirect("admin/post/{$post->id}");
+    }
+  
+    public function imageUpload(Request $request)
+    {
+        $extension = $request->file('wangEditorH5File')->getClientOriginalExtension();
+        $filenametostore = 'image_'.date('Y-m-d_H-i-s').'_'.time().'.'.$extension;
+        $file_link = 'images/'.date('Y-m').'/'.$filenametostore;
+        Storage::put($file_link, fopen($request->file('wangEditorH5File'), 'r+'), 'public');
+        return asset('storage/'.$file_link);
+    }
+
+    function coverImage(Request $request, Post $post)
+    {
+        Post::where('id', $post->id)->update(['image' => 2]);
+        
+        $this->validate($request, [
+            'select_file'  => 'required|image|mimes:jpg,jpeg,png,gif|max:2048'
+        ]);
+
+        $image = $request->file('select_file');
+        $new_name = rand() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images'), $new_name);
+
+
+
+        // $change = Post::where('name', \Auth::guard("admin")->user()->name)->update([ 'password' => bcrypt(request('password')) ]);
+        Post::where('id', $post->id)->update(['image' => 2]);
+
+        // if ( $change )
+        // {
+        //     return redirect("admin/setting")->withErrors("修改密码成功");
+        // } else 
+        // {
+        //     return redirect("admin/setting")->withErrors("修改密码失败");
+        // }
+
+        return back()->with('success', 'Image Uploaded Successfully')->with('path', $new_name);
     }
 
     public function trashs()
@@ -77,7 +115,7 @@ class PostController extends Controller
     public function trash(Post $post)
     {
         if($post->recycle == 1) {
-            post::where('id', $post->id)->update(['recycle' => 2]);
+            Post::where('id', $post->id)->update(['recycle' => 2]);
         }
         
         return redirect("/admin/posts/list");
@@ -101,13 +139,6 @@ class PostController extends Controller
         $post->delete();
 
         return redirect("/admin/posts/trashs/list");
-    }
-
-    //上传图片
-    public function imageUpload(Request $request)
-    {
-        $path = $request->file('wangEditorH5File')->storePublicly(md5(time()));
-        return asset('storage/'. $path);
     }
 
     public function search_display_post_id(Request $request)

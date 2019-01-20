@@ -16,30 +16,55 @@
   </ol>
 </section>
 
-<!-- Main content -->
-<div class="col-sm-12 blog-main">
+<section>
+  <div class="row">
     <form action="<?php echo url(''); ?>/admin/posts/list" method="POST">
-        {{csrf_field()}}
-        <button type="submit" class="btn btn-info submit-button">提交</button>
-        <!-- <input type="hidden" name="_token" value="{{csrf_token()}}" /> -->
-        <div class="form-group">
-            <label class="submit-title">标题</label>
-            <input name="title" type="text" class="form-control" placeholder="这里是标题">
-        </div>
-        <div class="form-group">
-            <label>内容</label>
-            <textarea id="editor1"  style="height:400px;max-height:500px;" name="content" class="form-control" placeholder="这里是内容"></textarea>
-        </div>
+    {{csrf_field()}}
+    
+    <div class="col-xs-12 col-sm-8 col-md-8 blog-main">
         
-        @include('admin/layout.error')
+            <div class="col-xs-12 col-sm-12 col-md-12">
+              
+              @include('admin/layout.error')
+
+              <div class="form-group">
+                <label class="submit-title">标题</label> 
+                <input name="title" type="text" class="form-control" placeholder="标题">
+              </div>
+            </div>
+
+            
+  
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <label>内容</label>
+                    <textarea id="content" name="content" class="form-control" style="height:600px;"  placeholder="内容"></textarea>
+                </div>
+            </div>
+
+
+        
+      </div>
+
+      <div class="col-xs-12 col-sm-4 col-md-4 blog-main">
+        <br/>
+        <button type="submit" class="btn btn-info submit-button">提交</button>
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+              <div class="form-group">
+                <label class="submit-title">封面链接</label> 
+                <input name="image" type="text" class="form-control" placeholder="链接">
+              </div>
+            </div>
+        
+      </div>
 
     </form>
+
     <br>
 
-</div><!-- /.blog-main -->
-
-<!-- /.content -->
-  <!-- /.content-wrapper -->
+  </div>
+</section>
 
 @endsection
 

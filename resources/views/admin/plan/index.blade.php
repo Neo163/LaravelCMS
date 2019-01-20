@@ -25,7 +25,7 @@
 
     <div class="tab-content">
       <div id="plan1" class="tab-pane fade in active">
-        <center><img src="/admin/images_plan/20181231175943.png" width="320px"></center>
+        <center><img src="/admin/images_plan/20190115235401.png" width="1200px"></center>
       </div>
       <div id="plan2" class="tab-pane fade">
         <center><img src="/admin/images_plan/20181231180551.png" width="320px"></center>

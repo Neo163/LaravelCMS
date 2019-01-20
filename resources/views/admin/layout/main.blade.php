@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Neo system</title>
@@ -26,7 +26,8 @@
   <!-- Daterange picker -->
   <link rel="stylesheet" href="<?php echo url(''); ?>/admin/bower_components/bootstrap-daterangepicker/daterangepicker.css">
   <!-- bootstrap wysihtml5 - text editor -->
-  <link rel="stylesheet" href="<?php echo url(''); ?>/admin/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <link rel="stylesheet" href="<?php echo url(''); ?>/admin/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" type="text/css" href="/weditor/css/wangEditor.min.css">
   <link rel="stylesheet" href="<?php echo url(''); ?>/admin/css/style.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -95,16 +96,8 @@
 <script src="<?php echo url(''); ?>/admin/dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo url(''); ?>/admin/dist/js/demo.js"></script>
-<!-- CK Editor -->
-<script src="<?php echo url(''); ?>/admin/bower_components/ckeditor/ckeditor.js"></script>
-<script>
-  $(function () {
-    // Replace the <textarea id="editor1"> with a CKEditor
-    // instance, using default configuration.
-    CKEDITOR.replace('editor1')
-    //bootstrap WYSIHTML5 - text editor
-    $('.textarea').wysihtml5()
-  })
-</script>
+
+<script type="text/javascript" src="/weditor/js/wangEditor.min.js"></script>
+<script src="/js/editor.js"></script>
 </body>
 </html>

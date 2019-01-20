@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Post;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 class PostController extends Controller
 {
-    //列表
     public function index()
     {
         $posts = Post::orderBy('created_at', 'desc')->paginate(6);
@@ -78,7 +79,7 @@ class PostController extends Controller
     }
 
     //上传图片
-    public function imageUpload(Request $request)
+    public function imageUpload2(Request $request)
     {
         $path = $request->file('wangEditorH5File')->storePublicly(md5(time()));
         return asset('storage/'. $path);

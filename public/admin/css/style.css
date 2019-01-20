@@ -41,15 +41,15 @@ aside.main-sidebar {
 
 /*setting change password*/
 .input1 { 
-    border-color: #fff; 
+	border-color: #fff; 
 }
 .btn-default1 { 
-    background-color: #fff; 
-    color: #fff; 
+	background-color: #fff; 
+	color: #fff; 
 }
 .btn-default { 
-    background-color: #f4f4f4; 
-    color: #444; 
+	background-color: #f4f4f4; 
+	color: #444; 
 }
 .input1::-webkit-input-placeholder { /* WebKit browsers */
     color: #fff;
@@ -64,7 +64,7 @@ aside.main-sidebar {
     color: #fff;
 }
 .input { 
-    border-color: #d2d6de;
+	border-color: #d2d6de;
 }
 .input::-webkit-input-placeholder { /* WebKit browsers */
     color: #B2B6BD;
@@ -79,6 +79,10 @@ aside.main-sidebar {
     color: #B2B6BD;
 }
 .btn-warning1 {
-    color: #fff;
+	color: #fff;
 }
 /* /setting change password*/
+
+.box {
+    border-top: 1px solid #d2d6de;
+}

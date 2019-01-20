@@ -4,16 +4,40 @@
         <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
+            @can("schedule")
+            <li><a href="<?php echo url(''); ?>/admin/schedules"><i class="fa fa-edit"></i> <span>日程</span></a></li>
+            @endcan
+
             @can("post")
             <li><a href="<?php echo url(''); ?>/admin/posts/list"><i class="fa fa-edit"></i> <span>文章</span></a></li>
             @endcan
-            
-            @can("plan")
-            <li><a href="<?php echo url(''); ?>/admin/plans"><i class="fa fa-paper-plane-o"></i> <span>定格计划图</span></a></li>
+
+            @can("category")
+            <li><a href="<?php echo url(''); ?>/admin/categories"><i class="fa fa-cog"></i> <span>分类</span></a></li>
             @endcan
             
+            @can("page")
+            <li><a href="<?php echo url(''); ?>/admin/pages/list"><i class="fa fa-edit"></i> <span>页面</span></a></li>
+            @endcan
+
+            @can("media")
+            <li><a href="<?php echo url(''); ?>/admin/media"><i class="fa fa-cog"></i> <span>媒体</span></a></li>
+            @endcan
+
+            @can("statistics")
+            <li><a href="<?php echo url(''); ?>/admin/setting"><i class="fa fa-cog"></i> <span>统计</span></a></li>
+            @endcan
+
             @can("setting")
             <li><a href="<?php echo url(''); ?>/admin/setting"><i class="fa fa-cog"></i> <span>设置</span></a></li>
+            @endcan
+
+            @can("api")
+            <li><a href="<?php echo url(''); ?>/admin/setting"><i class="fa fa-cog"></i> <span>API</span></a></li>
+            @endcan
+
+            @can("plan")
+            <li><a href="<?php echo url(''); ?>/admin/plans"><i class="fa fa-paper-plane-o"></i> <span>定格计划图</span></a></li>
             @endcan
 
             @can("logs")

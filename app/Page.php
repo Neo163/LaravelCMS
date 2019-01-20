@@ -4,7 +4,7 @@ namespace App;
 
 use App\Model;
 
-class Plan extends Model
+class Page extends Model
 {
     //
 }

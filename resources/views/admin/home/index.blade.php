@@ -30,7 +30,7 @@
             <div class="inner">
               <h3>{{$posts}}</h3>
 
-              <p>笔记</p>
+              <p>文章</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
