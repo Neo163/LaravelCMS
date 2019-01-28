@@ -4,7 +4,7 @@ demo password：123456<br/>
 	
 ## Email
 
-If you have some idea with Neo System, please send an e-mail to Neo via [neo365test@@gmail.com](mailto:neo365test@@gmail.com).
+If you have some idea with Neo System, please send an e-mail to Neo via [neopak365@gmail.com](mailto:neopak365@gmail.com).
 
 ## License
 
