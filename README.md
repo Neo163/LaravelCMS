@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Neo System</title>
-</head>
-<body>
-	<h3>Neo System demo : </h3><a href="http://demo.testdomain.solutions/admin/login" target="_blank">http://demo.testdomain.solutions/admin/login</a>
+<h3>Neo System demo : </h3><a href="http://demo.testdomain.solutions/admin/login" target="_blank">http://demo.testdomain.solutions/admin/login</a>
 	
 ## Security Vulnerabilities
 
@@ -14,5 +7,3 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-</body>
-</html>
