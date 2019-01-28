@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use \App\AdminUser;
 use \App\Post;
+use \App\Page;
 
 class HomeController extends Controller
 {
@@ -12,7 +13,8 @@ class HomeController extends Controller
 	{
 		$users = AdminUser::count();
 		$posts = Post::where('recycle', '1')->count();
-		return view('admin.home.index', compact('users', 'posts'));
+		$pages = Page::where('recycle', '1')->count();
+		return view('admin.home.index', compact('users', 'posts', 'pages'));
 	}
 
 }

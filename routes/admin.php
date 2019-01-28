@@ -75,6 +75,24 @@ Route::group(['prefix' => 'admin'], function(){
 			Route::post('/posts/{post}/status', '\App\Admin\Controllers\PostController@status');
 		});
 
+		Route::group(['middleware' => 'can:category'], function(){
+			
+			// 文章列表
+			Route::get("/categories/list", "\App\Admin\Controllers\CategoryController@index");
+			// 创建文章
+			Route::get("/category/create", "\App\Admin\Controllers\CategoryController@create");
+			Route::post("/categories/list", "\App\Admin\Controllers\CategoryController@store");
+			
+			// 文章详情页
+			Route::get("/category/{category}", "\App\Admin\Controllers\CategoryController@show");
+			// 编辑文章
+			Route::get("/category/{category}/edit", "\App\Admin\Controllers\CategoryController@edit");
+			Route::put("/category/{category}", "\App\Admin\Controllers\CategoryController@update"); 
+
+			Route::get("/category/{category}/delete", "\App\Admin\Controllers\CategoryController@delete");
+			
+		});
+
 		Route::group(['middleware' => 'can:page'], function(){
 			
 			// 文章列表
@@ -111,6 +129,26 @@ Route::group(['prefix' => 'admin'], function(){
 
 		});
 
+		Route::group(['middleware' => 'can:media'], function(){
+			
+			// 文章列表
+			Route::get("/medias/list", "\App\Admin\Controllers\mediaController@index");
+			// 创建文章
+			Route::get("/media/create", "\App\Admin\Controllers\mediaController@create");
+
+			Route::get("/media/mediaUpload", "\App\Admin\Controllers\MediaController@uploadPage");
+			Route::post("/media/mediaUpload", "\App\Admin\Controllers\MediaController@mediaUpload");
+			
+			// 文章详情页
+			Route::get("/media/{media}", "\App\Admin\Controllers\mediaController@show");
+
+			Route::get('/medias/trashs/list', '\App\Admin\Controllers\mediaController@trashs');
+			Route::get('/media/{media}/trash', '\App\Admin\Controllers\mediaController@trash');
+			Route::get('/media/{media}/restore', '\App\Admin\Controllers\mediaController@restore');
+			Route::get("/media/{media}/delete", "\App\Admin\Controllers\mediaController@delete");
+		
+		}); 
+
 		Route::group(['middleware' => 'can:setting'], function(){
 			Route::get("/setting", "\App\Admin\Controllers\SettingController@index");
 		    Route::get("/setting/user/change_password", "\App\Admin\Controllers\SettingController@change_password");
@@ -126,6 +164,10 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::group(['middleware' => 'can:logs'], function(){
 			Route::get('/logs', '\App\Admin\Controllers\LogController@index');
+		});
+
+		Route::group(['middleware' => 'can:api'], function(){
+			Route::get('/apis', '\App\Admin\Controllers\APIController@index');
 		});
 
 		Route::group(['middleware' => 'can:topic'], function(){

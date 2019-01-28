@@ -10,6 +10,11 @@ class PostController extends Controller
 {
     public function index()
     {
+        // $post = post::first();
+        // echo $post->id;
+        // echo '<hr/>';
+        // echo $post->category->id;
+
         $posts = Post::where('recycle', '1')->orderBy('created_at', 'desc')->paginate(20);
     	return view("admin/post/index", compact('posts'));
     }

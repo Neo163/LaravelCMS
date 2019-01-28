@@ -43,14 +43,14 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>53<sup style="font-size: 20px">%</sup></h3>
+              <h3>{{$pages}}</h3>
 
-              <p>其他</p>
+              <p>页面</p>
             </div>
             <div class="icon">
-              <i class="ion ion-bag"></i>
+              <i class="ion ion-podium"></i>
             </div>
-            <a href="<?php echo url(''); ?>/admin/posts" class="small-box-footer">更多 <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo url(''); ?>/admin/pages/list" class="small-box-footer">更多 <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         
@@ -58,14 +58,14 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>65</h3>
+              <h3> - </h3>
 
-              <p>其他</p>
+              <p>媒体</p>
             </div>
             <div class="icon">
-              <i class="ion ion-pie-graph"></i>
+              <i class="ion ion-images"></i>
             </div>
-            <a href="<?php echo url(''); ?>/admin/posts" class="small-box-footer">更多 <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo url(''); ?>/admin/medias/list" class="small-box-footer">更多 <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         

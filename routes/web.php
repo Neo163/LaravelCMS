@@ -13,4 +13,6 @@
 
 Route::get('/', 'IndexController@index');
 
-include_once('admin.php');
+Route::get('/test', 'IndexController@test');
+
+include_once('admin.php'); 

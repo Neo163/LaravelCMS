@@ -13,7 +13,7 @@
             @endcan
 
             @can("category")
-            <li><a href="<?php echo url(''); ?>/admin/categories"><i class="fa fa-cog"></i> <span>分类</span></a></li>
+            <li><a href="<?php echo url(''); ?>/admin/categories/list"><i class="fa fa-cog"></i> <span>分类</span></a></li>
             @endcan
             
             @can("page")
@@ -21,8 +21,8 @@
             @endcan
 
             @can("media")
-            <li><a href="<?php echo url(''); ?>/admin/media"><i class="fa fa-cog"></i> <span>媒体</span></a></li>
-            @endcan
+            <li><a href="<?php echo url(''); ?>/admin/medias/list"><i class="fa fa-picture-o"></i> <span>媒体</span></a></li>
+            @endcan 
 
             @can("statistics")
             <li><a href="<?php echo url(''); ?>/admin/setting"><i class="fa fa-cog"></i> <span>统计</span></a></li>
@@ -30,10 +30,6 @@
 
             @can("setting")
             <li><a href="<?php echo url(''); ?>/admin/setting"><i class="fa fa-cog"></i> <span>设置</span></a></li>
-            @endcan
-
-            @can("api")
-            <li><a href="<?php echo url(''); ?>/admin/setting"><i class="fa fa-cog"></i> <span>API</span></a></li>
             @endcan
 
             @can("plan")
