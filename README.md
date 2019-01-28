@@ -1,9 +1,9 @@
 <h3>Neo System demo : </h3><a href="http://demo.testdomain.solutions/admin/login" target="_blank">http://demo.testdomain.solutions/admin/login</a>
 	
-## Security Vulnerabilities
+## Email
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you have some idea with Neo System, please send an e-mail to Neo via [neo365test@@gmail.com](mailto:neo365test@@gmail.com).
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Neo System is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
