@@ -5,4 +5,4 @@ demo password：123456<br/>
 
 ## License
 
-Neo System is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Laravel CMS is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
