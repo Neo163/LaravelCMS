@@ -1,185 +1,159 @@
 <?php
 
-// 管理后台
+// 后台url，前序为creative
 Route::group(['prefix' => 'admin'], function(){
 
-	// 登录展示页面
-	Route::get('/login', '\App\Admin\Controllers\LoginController@index');
+	Route::get('/test', '\App\Admin\Controllers\DemoController@test');
+
+	// 登录 暂定一个login
+	Route::get('/login', '\App\Admin\Controllers\LoginController@index')->name('login');
 	// 登录行为
 	Route::post('/login', '\App\Admin\Controllers\LoginController@login');
-	// 登出行为
+	// 登出
 	Route::get('/logout', '\App\Admin\Controllers\LoginController@logout');
 
+	// 登入后的页面
 	Route::group(['middleware' => 'auth:admin'], function(){
-		// 首页
-		Route::get('/home', '\App\Admin\Controllers\HomeController@index');
 
-		Route::group(['middleware' => 'can:system'], function(){
+		// 后台首页
+		Route::get('/dashboard', '\App\Admin\Controllers\IndexController@index');
+
+		// Route::group(['middleware' => 'can:system'], function(){
 			// 管理人员模块
 			Route::get("/users", "\App\Admin\Controllers\UserController@index");
-			Route::get("/users/create", "\App\Admin\Controllers\UserController@create");
-			Route::post("/users/store", "\App\Admin\Controllers\UserController@store");
-			Route::get("/users/{user}/role", "\App\Admin\Controllers\UserController@role");
-			Route::post("/users/{user}/role", "\App\Admin\Controllers\UserController@storeRole");
+			// Route::get("/user/add", "\App\Admin\Controllers\UserController@add");
+			Route::post("/user/create", "\App\Admin\Controllers\UserController@create");
+			Route::get("/user/{user}/edit", "\App\Admin\Controllers\UserController@edit");
+			Route::post("/user/{user}/update", "\App\Admin\Controllers\UserController@update");
+			// Route::get("/user/{user}/role", "\App\Admin\Controllers\UserController@role");
+			// Route::post("/user/{user}/role", "\App\Admin\Controllers\UserController@storeRole");
 
 			// 角色
 			Route::get("/roles", "\App\Admin\Controllers\RoleController@index");
-			Route::get("/roles/create", "\App\Admin\Controllers\RoleController@create");
-			Route::post("/roles/store", "\App\Admin\Controllers\RoleController@store");
-			Route::get("/roles/{role}/permission", "\App\Admin\Controllers\RoleController@permission");
-			Route::post("/roles/{role}/permission", "\App\Admin\Controllers\RoleController@storePermission");
+			Route::post("/role/create", "\App\Admin\Controllers\RoleController@create");
+
+			// 角色权限
+			Route::get("/role/{role}/permission", "\App\Admin\Controllers\RoleController@permission");
+			Route::post("/role/{role}/permission", "\App\Admin\Controllers\RoleController@storePermission");
 
 			// 权限
 			Route::get('/permissions', '\App\Admin\Controllers\PermissionController@index');
-		    Route::get('/permissions/create', '\App\Admin\Controllers\PermissionController@create');
-		    Route::post('/permissions/store', '\App\Admin\Controllers\PermissionController@store');
-		});
+		    Route::post('/permission/create', '\App\Admin\Controllers\PermissionController@create');
+		// });
 
-		Route::group(['middleware' => 'can:post'], function(){
-			
-			// 文章列表
-			Route::get("/posts/list", "\App\Admin\Controllers\PostController@index");
-			// 创建文章
-			Route::get("/post/create", "\App\Admin\Controllers\PostController@create");
-			Route::post("/posts/list", "\App\Admin\Controllers\PostController@store");
+		Route::group(['middleware' => 'can:media'], function()
+		{	
+			Route::get("/media", "\App\Admin\Controllers\MediaController@index");
 
-			Route::post("/post/image/upload", "\App\Admin\Controllers\PostController@imageUpload");
-
-			Route::post("/post/uploadcoverimage", "\App\Admin\Controllers\PostController@coverImage");
-			
-			// 文章详情页
-			Route::get("/post/{post}", "\App\Admin\Controllers\PostController@show");
-			// 编辑文章
-			Route::get("/post/{post}/edit", "\App\Admin\Controllers\PostController@edit");
-			Route::put("/post/{post}", "\App\Admin\Controllers\PostController@update"); 
-
-			Route::get('/posts/trashs/list', '\App\Admin\Controllers\PostController@trashs');
-			Route::get('/post/{post}/trash', '\App\Admin\Controllers\PostController@trash');
-			Route::get('/post/{post}/restore', '\App\Admin\Controllers\PostController@restore');
-			Route::get("/post/{post}/delete", "\App\Admin\Controllers\PostController@delete");
-
-			// 搜索
-			Route::get('/search_display_post_id', '\App\Admin\Controllers\PostController@search_display_post_id');
-			Route::get('/search_display_post_title', '\App\Admin\Controllers\PostController@search_display_post_title');
-			Route::get('/search_display_post_category', '\App\Admin\Controllers\PostController@search_display_post_category');
-			Route::get('/search_display_post_created_at', '\App\Admin\Controllers\PostController@search_display_post_created_at');
-
-			Route::get('/search_hide_post_id', '\App\Admin\Controllers\PostController@search_hide_post_id');
-			Route::get('/search_hide_post_title', '\App\Admin\Controllers\PostController@search_hide_post_title');
-			Route::get('/search_hide_post_category', '\App\Admin\Controllers\PostController@search_hide_post_category');
-			Route::get('/search_hide_post_created_at', '\App\Admin\Controllers\PostController@search_hide_post_created_at');
-
-		
-			// 审核模块
-			Route::get('/posts', '\App\Admin\Controllers\PostController@index');
-			Route::post('/posts/{post}/status', '\App\Admin\Controllers\PostController@status');
-		});
-
-		Route::group(['middleware' => 'can:category'], function(){
-			
-			// 文章列表
-			Route::get("/categories/list", "\App\Admin\Controllers\CategoryController@index");
-			// 创建文章
-			Route::get("/category/create", "\App\Admin\Controllers\CategoryController@create");
-			Route::post("/categories/list", "\App\Admin\Controllers\CategoryController@store");
-			
-			// 文章详情页
-			Route::get("/category/{category}", "\App\Admin\Controllers\CategoryController@show");
-			// 编辑文章
-			Route::get("/category/{category}/edit", "\App\Admin\Controllers\CategoryController@edit");
-			Route::put("/category/{category}", "\App\Admin\Controllers\CategoryController@update"); 
-
-			Route::get("/category/{category}/delete", "\App\Admin\Controllers\CategoryController@delete");
-			
-		});
-
-		Route::group(['middleware' => 'can:page'], function(){
-			
-			// 文章列表
-			Route::get("/pages/list", "\App\Admin\Controllers\PageController@index");
-			// 创建文章
-			Route::get("/page/create", "\App\Admin\Controllers\PageController@create");
-			Route::post("/pages/list", "\App\Admin\Controllers\PageController@store");
-
-			Route::post("/page/image/upload", "\App\Admin\Controllers\PageController@imageUpload");
-
-			Route::post("/page/uploadcoverimage", "\App\Admin\Controllers\PageController@coverImage");
-			
-			// 文章详情页
-			Route::get("/page/{page}", "\App\Admin\Controllers\PageController@show");
-			// 编辑文章
-			Route::get("/page/{page}/edit", "\App\Admin\Controllers\PageController@edit");
-			Route::put("/page/{page}", "\App\Admin\Controllers\pageController@update"); 
-
-			Route::get('/pages/trashs/list', '\App\Admin\Controllers\PageController@trashs');
-			Route::get('/page/{page}/trash', '\App\Admin\Controllers\PageController@trash');
-			Route::get('/page/{page}/restore', '\App\Admin\Controllers\PageController@restore');
-			Route::get("/page/{page}/delete", "\App\Admin\Controllers\PageController@delete");
-
-			// 搜索
-			Route::get('/search_display_page_id', '\App\Admin\Controllers\PageController@search_display_page_id');
-			Route::get('/search_display_page_title', '\App\Admin\Controllers\PageController@search_display_page_title');
-			Route::get('/search_display_page_category', '\App\Admin\Controllers\PageController@search_display_page_category');
-			Route::get('/search_display_page_created_at', '\App\Admin\Controllers\PageController@search_display_page_created_at');
-
-			Route::get('/search_hide_page_id', '\App\Admin\Controllers\PageController@search_hide_page_id');
-			Route::get('/search_hide_page_title', '\App\Admin\Controllers\PageController@search_hide_page_title');
-			Route::get('/search_hide_page_category', '\App\Admin\Controllers\PageController@search_hide_page_category');
-			Route::get('/search_hide_page_created_at', '\App\Admin\Controllers\PageController@search_hide_page_created_at');
-
-		});
-
-		Route::group(['middleware' => 'can:media'], function(){
-			
-			// 文章列表
-			Route::get("/medias/list", "\App\Admin\Controllers\mediaController@index");
-			// 创建文章
-			Route::get("/media/create", "\App\Admin\Controllers\mediaController@create");
-
-			Route::get("/media/mediaUpload", "\App\Admin\Controllers\MediaController@uploadPage");
 			Route::post("/media/mediaUpload", "\App\Admin\Controllers\MediaController@mediaUpload");
+			Route::post("/media/mediaUploadApi", "\App\Admin\Controllers\MediaController@mediaUploadApi");
 			
-			// 文章详情页
-			Route::get("/media/{media}", "\App\Admin\Controllers\mediaController@show");
+			Route::get('/media/category/{bMediaCategory}', '\App\Admin\Controllers\MediaController@category');
+		});
 
-			Route::get('/medias/trashs/list', '\App\Admin\Controllers\mediaController@trashs');
-			Route::get('/media/{media}/trash', '\App\Admin\Controllers\mediaController@trash');
-			Route::get('/media/{media}/restore', '\App\Admin\Controllers\mediaController@restore');
-			Route::get("/media/{media}/delete", "\App\Admin\Controllers\mediaController@delete");
+		// Route::group(['middleware' => 'can:setting'], function()
+		// {
+			Route::get("/setting", "\App\Admin\Controllers\SettingController@setting");
+			// Route::get("/setting", "\App\Admin\Controllers\SettingController@development");
+
+			Route::post("/setting", "\App\Admin\Controllers\SettingController@create");
+
+			Route::get("/information", "\App\Admin\Controllers\SettingController@information");
+
+			Route::get("/sliders", "\App\Admin\Controllers\SettingController@development");
+			Route::get("/google/analysis", "\App\Admin\Controllers\SettingController@development");
 		
-		}); 
+		// });
 
-		Route::group(['middleware' => 'can:setting'], function(){
-			Route::get("/setting", "\App\Admin\Controllers\SettingController@index");
-		    Route::get("/setting/user/change_password", "\App\Admin\Controllers\SettingController@change_password");
-		});
+		Route::group(['middleware' => 'can:menu'], function()
+		{
+			Route::get("/menus", "\App\Admin\Controllers\MenuCategoryController@index");
 
-		Route::group(['middleware' => 'can:statistics'], function(){
-			Route::get("/statistics", "\App\Admin\Controllers\StatisticsController@index");
-		});
+			Route::get("/menu/{bmenu}", "\App\Admin\Controllers\MenuController@index");
 
-		Route::group(['middleware' => 'can:plan'], function(){
-			Route::get('/plans', '\App\Admin\Controllers\PlanController@index');
-		});
+			Route::get("/menu1", "\App\Admin\Controllers\MenuController@test");
 
-		Route::group(['middleware' => 'can:logs'], function(){
-			Route::get('/logs', '\App\Admin\Controllers\LogController@index');
-		});
+			Route::post("/menuCategory/create", "\App\Admin\Controllers\MenuCategoryController@create");
 
-		Route::group(['middleware' => 'can:api'], function(){
-			Route::get('/apis', '\App\Admin\Controllers\APIController@index');
-		});
-
-		Route::group(['middleware' => 'can:topic'], function(){
-			Route::resource('topics', '\App\Admin\Controllers\TopicController', ['only' => ['index', 'create', 'store', 'destroy']]);
-		});
-
-		Route::group(['middleware' => 'can:notice'], function(){
-			Route::resource('notices', '\App\Admin\Controllers\NoticeController', ['only' => ['index', 'create', 'store']]);
-		});
+			Route::post("/menuLocation/create", "\App\Admin\Controllers\MenuLocationController@create");
 		
+		});
+
+		// Route::group(['middleware' => 'can:post'], function()
+		// {
+			Route::get("/posts/type/{bPostType}", "\App\Admin\Controllers\PostController@index");
+			Route::get("/post/type/add/{bPostType}", "\App\Admin\Controllers\PostController@add");
+			Route::get("/post/type/edit/{bPostType}/{bpost}", "\App\Admin\Controllers\PostController@edit");
+			Route::post("/post/type/{bPostType}/{post}/update", "\App\Admin\Controllers\PostController@update");
+
+			// Route::post("/post/type/{bPostType}/create", "\App\Admin\Controllers\PostController@create");
+			Route::post("/post/create", "\App\Admin\Controllers\PostController@create");
+
+			// Route::post("/post/type/{bPostType}/update", "\App\Admin\Controllers\PostController@update");
+			Route::post("/post/update/{bpost}", "\App\Admin\Controllers\PostController@update");
+
+			// Route::get("/post/edit/{bpost}", "\App\Admin\Controllers\PostController@edit");
+			
+		
+		// });
+
+		// Route::group(['middleware' => 'can:postType'], function()
+		// {
+			Route::get("/posts/types", "\App\Admin\Controllers\PostTypeController@index");
+		
+		// });
+
+		// Route::group(['middleware' => 'can:postCategory'], function()
+		// {	
+			Route::get("/posts/categories", "\App\Admin\Controllers\PostCategoryController@index");
+			Route::get("/posts/categories/type/{bPostType}", "\App\Admin\Controllers\PostCategoryController@posts_categories");
+		
+		// });
+
+		// Route::group(['middleware' => 'can:postCategory'], function(){
+			
+			// 菜单
+			Route::get("/posts/tags", "\App\Admin\Controllers\PostTagController@index");
+			Route::get("/posts/tags/type/{bPostType}", "\App\Admin\Controllers\PostTagController@posts_tags");
+		
+		// });
+
+		// Route::group(['middleware' => 'can:page'], function()
+		// {
+			Route::get("/pages", "\App\Admin\Controllers\PageController@index");
+			Route::get("/page/add", "\App\Admin\Controllers\PageController@add");
+			Route::post("/page/create", "\App\Admin\Controllers\PageController@create");
+
+			Route::get("/page/edit/{bpage}", "\App\Admin\Controllers\PageController@edit");
+			Route::post("/page/update/{bpage}", "\App\Admin\Controllers\PageController@update");
+		// });
+
+		// Route::group(['middleware' => 'can:template'], function()
+		// {
+			Route::get("/templates", "\App\Admin\Controllers\TemplateController@template");
+			Route::get("/template/add", "\App\Admin\Controllers\TemplateController@add");
+			Route::post("/template/create", "\App\Admin\Controllers\TemplateController@create");
+			Route::get("/template/{template}/edit", "\App\Admin\Controllers\TemplateController@edit");
+			Route::post("/template/{template}/update", "\App\Admin\Controllers\TemplateController@update");
+		// });
+
+		// Route::group(['middleware' => 'can:paragraph'], function()
+		// {
+			Route::get("/paragraphs", "\App\Admin\Controllers\ParagraphController@index");
+			Route::post("/paragraph/create", "\App\Admin\Controllers\ParagraphController@create");
+		
+		// });
+
+		// Route::group(['middleware' => 'can:comments'], function()
+		// {
+			Route::get("/comments", "\App\Admin\Controllers\CommentController@index");
+			Route::post("/comment/reply", "\App\Admin\Controllers\CommentController@reply");
+		
+		// });
+
+			// test
+			Route::get('/sorting', '\App\Admin\Controllers\DemoController@sorting_page');
 
 	});
-	
-});
 
+});

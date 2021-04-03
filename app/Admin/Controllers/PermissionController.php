@@ -2,32 +2,85 @@
 
 namespace App\Admin\Controllers;
 
-use \App\AdminUser;
+use \App\Models\BUser;
+use \App\Models\BPermission;
+use \App\Models\BPermissionRole;
 
 class PermissionController extends Controller
 {
 	// 权限列表页面
 	public function index()
 	{
-		$permissions = \App\AdminPermission::paginate(10);
-		return view("/admin/permission/index", compact('permissions'));
-	}
+		$permissions = BPermission::paginate(20);
 
-	// 创建权限
-	public function create()
-	{
-		return view('/admin/permission/add');
+		return view("admin.permission.index", compact('permissions'));
 	}
 
 	// 创建权限实际行为
-	public function store()
+	public function create()
 	{
 		$this->validate(request(), [
-			'name' => 'required|min:3',
-			'description' => 'required'
+			'title' => 'required|min:1'
 		]);
 
-		\App\AdminPermission::create(request(['name', 'description']));
-		return redirect('/admin/permissions');
+		BPermission::create([
+            'title' => request('title'),
+            'description' => request('description'),
+        ]);
+
+		return back();
 	}
+
+	public function update()
+	{
+		$this->validate(request(), [
+            'title' => 'required',
+        ]);
+
+		// $this->authorize('update_note', $note);
+
+        $updateKey = 'upda1tebAEzsBQAMAaadfa1aFjsaaDssfjHI0qGFcdsf33Sss1S3UpdaFsteM2enu';
+        $updateKey1 = 'u1pAdaateAEzdBSQaMASsmaYScDgsrjbdjHFaSsI0ga3fqF33F3U1pfdSSaatefM3enu';
+
+        if ( request('updateKey') == $updateKey && request('updateKey1') == $updateKey1 )
+        {
+            BPermission::where( 'id', request('id') )->first()->update([
+                'title' => request('title'),
+                'description' => request('description'),
+            ]);
+        }
+
+		$data = array();
+		$data['id']    = request('id');
+		$data['title'] = request('title');
+		$data['description'] = request('description');
+
+		return $data;
+	}
+
+    public function delete()
+    {
+        $BPermission = BPermission::findOrFail(request('id'));
+
+        $deleteKey = 'del1eteVkVm1aPU2xXNQXdyYTQ1PSID1ETaf5678bsInZhb2HVlcI0003deleteM1enu';
+        $deleteKey1 = 'dele1teNJcV1888AaRHp1NkxadgfnPT0iLC24678J12YW3dx1ZSI6000bdeleteM2enu';
+
+        if ( request('deleteKey') == $deleteKey && request('deleteKey1') == $deleteKey1 )
+        {
+            $BPermissionRole = BPermissionRole::where('permission_id', request('id'));
+
+            if($BPermissionRole->count() > 0 )
+            {
+                $BPermissionRole->delete();
+            }
+
+            // 事务处理
+            if($BPermission->delete())
+            {
+                return 'delete';
+            }
+        }
+
+        return 'delete fail';
+    }
 }

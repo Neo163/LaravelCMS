@@ -3,21 +3,32 @@
 namespace App\Admin\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Log;
-use \App\User;
-use Illuminate\Support\Facades\DB;
+use \App\Models\User;
+use \App\Models\BLog;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function __construct()
+    public function index()
     {
-        //
-    }
+        if (Auth::guard("admin")->check())
+        {
+            return redirect('/admin/dashboard');
+        }
 
-	public function index()
-	{
-		return view('admin.login.index');
-	}
+        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $is_pc = (strpos($agent, 'windows nt')) ? true : false; 
+         
+        if($is_pc)
+        {
+            return view('admin.login.index-pc');
+        } else {
+            return view('admin.login.index-mobile');
+        }
+
+        return view('admin.login.index-pc');
+    	
+    }
 
 	public function login(Request $request)
 	{
@@ -27,12 +38,13 @@ class LoginController extends Controller
         ]);
 
         $user = request(['name', 'password']);
+
         if(\Auth::guard("admin")->attempt($user)) {
 
-        	$log = $request->isMethod('put') ? Log::findOrFail($request->log_id) : new Log;
+        	$log = $request->isMethod('put') ? BLog::findOrFail($request->log_id) : new BLog;
             $log->id = $request->input('log_id');
             $log->title = $request->input('name');
-            $log->content = 'Login suceesfully';
+            $log->description = 'Login suceesfully';
             $log->category = 'Login_logout';
             
             //strcasecmp 比较两个字符，不区分大小写。返回0，>0，<0。
@@ -55,7 +67,7 @@ class LoginController extends Controller
                 echo 'false'; 
             }
 
-            return redirect('/admin/home');
+            return redirect('/admin/dashboard');
         }
 
         return \Redirect::back()->withErrors("用户名密码不匹配");
@@ -63,10 +75,10 @@ class LoginController extends Controller
 
 	public function logout(Request $request)
 	{
-		$log = $request->isMethod('put') ? Log::findOrFail($request->log_id) : new Log;
+		$log = $request->isMethod('put') ? BLog::findOrFail($request->log_id) : new BLog;
         $log->id = $request->input('log_id');
         $log->title = \Auth::guard("admin")->user()->name;
-        $log->content = 'Logout suceesfully';
+        $log->description = 'Logout suceesfully';
         $log->category = 'Login_logout';
         
         //strcasecmp 比较两个字符，不区分大小写。返回0，>0，<0。

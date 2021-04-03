@@ -3,30 +3,28 @@
 namespace App\Admin\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use \App\AdminUser;
+use \App\Models\BParagraph;
 
 class SettingController extends Controller
 {
-	public function index()
+    public function setting()
     {
-        return view('/admin/setting/index');
+    	$setting = BParagraph::where('id', 1)->first()->content;
+
+    	date_default_timezone_set("Asia/Shanghai");
+    	
+    	$timeId = date("Y-m-d_h-i"); // date("Y-m-d h:i:sa")
+
+    	return view('admin.setting.setting', compact('setting', 'timeId'));
     }
 
-    public function change_password(Request $request)
+    public function information()
     {
-    	$this->validate(request(), [
-            'password' => 'required'
-        ]);
+    	return view('admin.setting.information');
+    }
 
-        $change = AdminUser::where('name', \Auth::guard("admin")->user()->name)->update([ 'password' => bcrypt(request('password')) ]);
-
-        if ( $change )
-        {
-            return redirect("admin/setting")->withErrors("修改密码成功");
-        } else 
-        {
-            return redirect("admin/setting")->withErrors("修改密码失败");
-        }
+    public function development()
+    {
+    	return view('admin.setting.development');
     }
 }

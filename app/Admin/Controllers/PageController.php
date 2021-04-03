@@ -3,234 +3,426 @@
 namespace App\Admin\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Page;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use \App\Models\BUser;
+use \App\Models\BPage;
+use \App\Models\BPageParagraph;
+use \App\Models\BMedia;
+use \App\Models\BMediaCategory;
+use \App\Models\BTemplate;
 
 class PageController extends Controller
 {
-    public function index()
+	public function index()
+	{
+		$pages = BPage::paginate(20);
+
+		return view("admin.page.page", compact('pages'));
+	}
+
+    public function add()
     {
-        $pages = Page::where('recycle', '1')->orderBy('created_at', 'desc')->paginate(20);
-    	return view("admin/page/index", compact('pages'));
-    }
-    
-    //详情页面
-    public function show(Page $page)
-    {  
-        return view("admin/page/show", compact('page'));
+        // media start
+        $count = BMedia::count();
+        $bData = $this->page_start_end($count);
+        
+        $media = BMedia::orderBy('created_at', 'desc')->get();
+        $mediaCategories = BMediaCategory::orderBy('sort', 'asc')->get();
+        // media end
+
+        return view("admin.page.add", compact('media', 'mediaCategories', 'bData'));
     }
 
-    //创建页面
-    public function create()
+    public function templatesData()
     {
-        return view("admin/page/create");
+        $data = array();
+        $data['templates'] = BTemplate::where( 'b_templates_category', 2 )->orderBy('created_at', 'desc')->get();
+
+        return $data;
     }
 
-    //创建逻辑
-    public function store()
+    public function contentStatus(BPage $bpage)
     {
-        //验证：检查输入的资料
-        $this->validate(request(),[
-            'title' => 'required|string|max:200|min:1',
-            // 'content' => 'required|string|min:5',
-        ],[
-            'title.min' => '文章标题过短',
+        if($bpage->content_show == 0)
+        {
+            BPage::where( 'id', $bpage->id )->first()->update([
+                'content_show' => 1,
+            ]);
+
+            return 'OK';
+        } else
+        {
+            BPage::where( 'id', $bpage->id )->first()->update([
+                'content_show' => 0,
+            ]);
+            return 'No';
+        }
+
+        return 'No';
+    }
+
+	public function create(Request $request)
+    {
+        // $str = substr(request('template'), 25);
+        // $template = substr($str,0,strlen($str)-7);
+
+        $this->validate(request(), [
+            'title' => 'required|min:1'
         ]);
 
-        //逻辑：提交数据到page表中
-        $page = Page::create(request(['title', 'content']));
+        $structure['text'] = request('content_num_text');
+        $structure['image'] = request('content_num_image');
+        $structure['video'] = request('content_num_video');
+        $slider = request('content_num_slider');
 
-        //渲染：显示或者跳转
-        return redirect("admin/pages/list");
+        if($slider > 0)
+        {
+            $structure['slider']['number'] = $slider;
+
+            for($i=1; $i<=$slider; $i++)
+            {
+                $structure['slider']['slider'.$i] = request('content_num_slider'.$i);
+            }
+        }
+
+        if(request('content_num_slider') <= 0)
+        {
+            $structure['slider']['number'] = 0;
+        }
+
+        $structure = json_encode($structure);
+
+        $countMax = BPage::max('id');
+
+        if($countMax > 0)
+        {
+            $id = $countMax+1;
+
+            // 事务
+            BPage::create([
+                'id' => $id,
+                'title' => request('title'),
+                'content' => request('content'),
+                'image' => request('image'),
+                'structure' => $structure,
+                'template' => request('front_end_template'),
+                'b_user_id' => Auth::guard("admin")->id(),
+            ]);
+
+            if(!empty($request['data']))
+            {
+                foreach ($request['data'] as $key => $data)
+                {
+                    if($data == null)
+                    {
+                        $data = '';
+                    }
+
+                    $category = $this->page_paragraph_category($key);
+
+                    $create = BPageParagraph::create([
+                        'title' => $key,
+                        'content' => $data,
+                        'category' => $category,
+                        'b_page_id' => $id
+                    ]);
+
+                    if(!$create)
+                    {
+                        return 'create faile';
+                    }
+                }
+            }
+        } else
+        {
+            // 事务
+            BPage::create([
+                'title' => request('title'),
+                'content' => request('content'),
+                'image' => request('image'),
+                'structure' => $structure,
+                'template' => request('front_end_template'),
+                'b_user_id' => Auth::guard("admin")->id(),
+            ]);
+
+            $countMax = BPage::max('id');
+
+            if(!empty($request['data']))
+            {
+                foreach ($request['data'] as $key => $data)
+                {
+                    if($data == null)
+                    {
+                        $data = '';
+                    }
+
+                    $category = $this->page_paragraph_category($key);
+
+                    $create = BPageParagraph::create([
+                        'title' => $key,
+                        'content' => $data,
+                        'category' => $category,
+                        'b_page_id' => $countMax
+                    ]);
+
+                    if(!$create)
+                    {
+                        return 'create faile';
+                    }
+                }
+            }
+        }
+
+        return redirect("/admin/pages");
     }
 
-    //编辑逻辑
-    public function edit(Page $page)
+    public function page_paragraph_category($key)
     {
-        return view("admin/page/edit", compact('page'));
+        // text, image, slider video
+        $category = substr($key, 0 , 4);
+
+        if(substr($key, 0 , 4) == 'text')
+        {
+            $category = 'text';
+        }
+
+        if(substr($key, 0 , 5) == 'image')
+        {
+            $category = 'image';
+        }
+
+        if(substr($key, 0 , 6) == 'slider')
+        {
+            $category = 'slider';
+        }
+
+        if(substr($key, 0 , 5) == 'video')
+        {
+            $category = 'video';
+        }
+
+        return $category;
     }
 
-    //更新逻辑
-    public function update(Page $page, Request $request)
+    public function edit(BPage $bpage)
     {
-        //验证
-        $this->validate(request(),[
-            'title' => 'required|string|max:100|min:2',
-            // 'content' => 'required|string|min:5',
+        // media start
+        $count = BMedia::count();
+        $bData = $this->page_start_end($count);
+        
+        $media = BMedia::orderBy('created_at', 'desc')->paginate(10);
+        $mediaCategories = BMediaCategory::orderBy('sort', 'asc')->get();
+        // media end
+
+        return view("admin.page.edit", compact('bpage','media', 'mediaCategories', 'bData'));
+    }
+
+    public function editData()
+    {
+        $data = array();
+        $json = array();
+
+        $bpage = BPage::findOrFail(request('id'));
+        $data['bpage'] = $bpage;
+
+        $countPara = BPageParagraph::where('b_page_id', request('id'))->count();
+        
+        if($countPara > 0)
+        {
+            $BPageParagraph = BPageParagraph::where('b_page_id', request('id'))->get();
+        
+            foreach ($BPageParagraph as $key => $para)
+            {
+                // $json[$para['title']] = $para['content'];
+
+                if(substr($para['title'] , 0 , 4) == 'text')
+                {
+                    $json['text'][$para['title']] = $para['content'];
+                }
+
+                if(substr($para['title'] , 0 , 5) == 'image')
+                {
+                    $json['image'][$para['title']] = $para['content'];
+                }
+
+                if(substr($para['title'] , 0 , 5) == 'video')
+                {
+                    $json['video'][$para['title']] = $para['content'];
+                }
+
+                if(substr($para['title'] , 0 , 6) == 'slider')
+                {
+                    $json['slider'][$para['title']] = $para['content'];
+                }
+            }
+
+            $data['paragraph'] = json_encode($json);
+        }
+
+        return $data;
+    }
+
+    public function update(BPage $bpage, Request $request)
+    {
+        // return $bpage->id;
+        $this->validate(request(), [
+            'title' => 'required',
         ]);
 
-        //逻辑
-        $page->title = request('title');
-        $page->content = request('content');
-        $page->save();
+        // $this->authorize('update_note', $note);
 
-        //渲染
-        return redirect("admin/page/{$page->id}");
-    }
-  
-    public function imageUpload(Request $request)
-    {
-        $extension = $request->file('wangEditorH5File')->getClientOriginalExtension();
-        $filenametostore = 'image_'.date('Y-m-d_H-i-s').'_'.time().'.'.$extension;
-        $file_link = 'images/'.date('Y-m').'/'.$filenametostore;
-        Storage::put($file_link, fopen($request->file('wangEditorH5File'), 'r+'), 'public');
-        return asset('storage/'.$file_link);
-    }
+        $structure['text'] = request('content_num_text');
+        $structure['image'] = request('content_num_image');
+        $structure['video'] = request('content_num_video');
+        $slider = request('content_num_slider');
 
-    function coverImage(Request $request, Page $page)
-    {
-        page::where('id', $page->id)->update(['image' => 2]);
-        
-        $this->validate($request, [
-            'select_file'  => 'required|image|mimes:jpg,jpeg,png,gif|max:2048'
+        if($slider > 0)
+        {
+            $structure['slider']['number'] = $slider;
+
+            for($i=1; $i<=$slider; $i++)
+            {
+                $structure['slider']['slider'.$i] = request('content_num_slider'.$i);
+            }
+        }
+
+        if(request('content_num_slider') <= 0)
+        {
+            $structure['slider']['number'] = 0;
+        }
+
+        $structure = json_encode($structure);
+
+        // 更新页面主体
+        BPage::where( 'id', $bpage->id )->first()->update([
+            'title' => request('title'),
+            'content' => request('content'),
+            'image' => request('image'),
+            'structure' => $structure,
+            'template' => request('front_end_template'),
+            'b_user_id' => Auth::guard("admin")->id(),
         ]);
 
-        $image = $request->file('select_file');
-        $new_name = rand() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images'), $new_name);
+        // 更新当前页面的句子
+        if(!empty($request['data']))
+        {
+            foreach ($request['data'] as $key => $data)
+            {
+                $BPageParagraph = BPageParagraph::where([ 
+                    ['b_page_id', $bpage->id], 
+                    ['title', $key] 
+                ]);
 
-        page::where('id', $page->id)->update(['image' => 2]);
+                $category = $this->page_paragraph_category($key);
 
-        return back()->with('success', 'Image Uploaded Successfully')->with('path', $new_name);
-    }
+                if($BPageParagraph->count() > 0)
+                {
+                    $BPageParagraph->first()->update([
+                        'content' => $data,
+                        'category' => $category,
+                    ]);
+                }
 
-    public function trashs()
-    {
-        $pages = Page::where('recycle', '2')->orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.page.trash', compact('pages'));
-    }
+                if($BPageParagraph->count() == 0)
+                {
+                    $create = BPageParagraph::create([
+                        'title' => $key,
+                        'content' => $data,
+                        'category' => $category,
+                        'b_page_id' => $bpage->id,
+                    ]);
 
-    public function trash(Page $page)
-    {
-        if($page->recycle == 1) {
-            page::where('id', $page->id)->update(['recycle' => 2]);
+                    if(!$create)
+                    {
+                        return 'create faile';
+                    }
+                }
+
+            }
         }
-        
-        return redirect("/admin/pages/list");
+
+        return back();
     }
 
-    public function restore(Page $page)
+    public function delete()
     {
-        if($page->recycle == 2) {
-            page::where('id', $page->id)->update(['recycle' => 1]);
+        $deleteKey = 'deleteAEzBQMmYg111ADFSSDFSASDFWEQWZVFBHssd12345678rjjHI330q111page';
+        $deleteKey1 = 'delet111eAAEFGERSFGTJRYIKRDafaergwegrg12345678EzBQMmaYgrjdjHSI0333gq111media';
+
+        if ( request('deleteKey') == $deleteKey && request('deleteKey1') == $deleteKey1 )
+        {
+            $BPage = BPage::findOrFail(request('id'));
+
+            $BPageParagraph = BPageParagraph::where('b_page_id', request('id'));
+
+            if($BPageParagraph->count() > 0 )
+            {
+                // 事务处理
+                $BPageParagraph->delete();
+            }
+
+            if($BPage->delete())
+            {
+                return 'delete';
+            }
         }
-        
-        return redirect("/admin/pages/trashs/list");
+
+        return 'delete fail';
     }
 
-
-    //删除逻辑
-    public function delete(Page $page)
+    public function getQuerystr($url,$key)
     {
-        // $this->authorize('delete', $page); //TODO: 用户的权限验证
-
-        $page->delete();
-
-        return redirect("/admin/pages/trashs/list");
-    }
-
-    public function search_display_page_id(Request $request)
-    {
-        $search = $request->input('s');
-
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '1'], ['id', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
+        $res = '';
+        $a = strpos($url,'?');
+        if($a!==false){
+            $str = substr($url,$a+1);
+            $arr = explode('&',$str);
+            foreach($arr as $k=>$v){
+            $tmp = explode('=',$v);
+                if(!empty($tmp[0]) && !empty($tmp[1])){
+                    $barr[$tmp[0]] = $tmp[1];
+                }
+            }
         }
-        
-        return view('admin.page.index', compact('pages'));
-    }
-
-    public function search_display_page_title(Request $request)
-    {
-        $search = $request->input('s');
-
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '1'], ['title', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
+        if(!empty($barr[$key])){
+            $res = $barr[$key];
         }
-        
-        return view('admin.page.index', compact('pages'));
+        return $res;
     }
-    
-    public function search_display_page_category(Request $request)
+
+    public function page_start_end($count)
     {
-        $search = $request->input('s');
+        $data = array();
 
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '1'], ['category', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
+        $data['allCount'] = BMedia::count();
+
+        $url = 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+        $key = 'page';
+
+        if(empty($this->getQuerystr($url,$key)) || $this->getQuerystr($url,$key) == 1)
+        {
+            $data['page'] = 1;
+        } elseif($this->getQuerystr($url,$key) > 1 && $this->getQuerystr($url,$key) <= ceil($count/10))
+        {
+            $data['page'] = $this->getQuerystr($url,$key);
+        } else {
+            $data['page'] = ceil($count/10);
         }
-        
-        return view('admin.page.index', compact('pages'));
-    }
-    
-    public function search_display_page_created_at(Request $request)
-    {
-        $search = $request->input('s');
 
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '1'], ['created_at', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
+        $data['start_media'] = ($data['page']-1) * 10 + 1;
+        if($count == 0)
+        {
+            $data['start_media'] = 0;
         }
-        
-        return view('admin.page.index', compact('pages'));
-    }
 
-    public function search_hide_page_id(Request $request)
-    {
-        $search = $request->input('s');
-
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '2'], ['id', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
+        if(($data['page'] * 10) < $count)
+        {
+            $data['end_media'] = $data['page'] * 10;
+        } else
+        {
+            $data['end_media'] = $count;
         }
-        
-        return view('admin.page.trash', compact('pages'));
-    }
 
-    public function search_hide_page_title(Request $request)
-    {
-        $search = $request->input('s');
-
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '2'], ['title', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
-        }
-        
-        return view('admin.page.trash', compact('pages'));
+        return $data;
     }
-    
-    public function search_hide_page_category(Request $request)
-    {
-        $search = $request->input('s');
-
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '2'], ['category', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
-        }
-        
-        return view('admin.page.trash', compact('pages'));
-    }
-    
-    public function search_hide_page_created_at(Request $request)
-    {
-        $search = $request->input('s');
-
-        if (empty($search)) {
-            $pages = Page::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $pages = Page::where([ ['recycle', '2'], ['created_at', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
-        }
-        
-        return view('admin.page.trash', compact('pages'));
-    }
-    
 }

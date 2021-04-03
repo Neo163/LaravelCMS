@@ -3,31 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use \App\Models\BUser;
+use \App\Models\BPage;
+use \App\Models\BPageParagraph;
+use \App\Models\BParagraph;
 
 class IndexController extends Controller
 {
-    public function index() 
+    public function index()
     {
-    	return view('web.index.index');
+        return view('web.index.index');
     }
 
-    // 测试API ajax post data给后端
-    public function test(Request $request)
+    public function test()
     {
-        return view('web.index.test');
-    }
+        return 'index';
+    	$bpage = BPage::findOrFail(10);
 
-    public function search_display_post_id(Request $request)
-    {
-        $search = $request->input('s');
+    	$BPageParagraph = BPageParagraph::where('post_id', $BPage->id)->get();
 
-        if (empty($search)) {
-            $posts = Post::orderBy('created_at', 'desc')->paginate(10);
-        } else { 
-            $posts = Post::where([ ['recycle', '1'], ['id', 'like', "%$search%"], ])->orderBy('created_at', 'desc')->paginate(10);
+        $data = array();
+        foreach ($BPageParagraph as $key => $para)
+        {
+            $data[$para['title']] = $para['content'];
         }
-        
-        return view('admin.post.index', compact('posts'));
+
+    	return view('web.index.index', compact('bpage', 'data'));
     }
 }

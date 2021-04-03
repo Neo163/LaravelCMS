@@ -1,35 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="/admin/js/jquery-3.5.1.js"></script>
+    <script src="/admin/js/common.js"></script>
+</head>
+<body>
+	<br><br><br><br><br><br><br><br>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<center>
+		<h1>这里是 <span class="t1 text"></span></h1>
+	</center>
 
-    <title>Neo system</title>
-  </head>
-  <body>
-    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-  <div class="container">
+	<style>
+		.text {
+		    color: #0099FF;
+		}
+	</style>
     
-    <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-12">
-        <center><h1>Neo</h1></center><br/><br/>
-      </div>
+    <script>
+        var id = 1;
 
-      <div class="col-sm-12 col-md-12 col-lg-12">
-        <a href="<?php echo url(''); ?>/admin/login"><button type="button" class="btn btn-primary btn-lg btn-block">Neo system</button></a>
-      </div>
-     
-    </div>
-  </div>
-    
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+        $.ajax({
+            url: "/api/admin/paragraph",
+            method: "GET",
+            data: {
+                id: id,
+                paragraphKey: 'create897FSJs$#&*^*0KEJOEPs/dRMUrrfASD!#$F0784fd0adad1%^&^ewhfghdde6SDFSb9d9125c07493b8eId9EA1',
+            },
+            dataType: "json",
+            cache : false,
+            success: function (data)
+            {
+                // console.log(data);
+                var data = JSON.parse(data['paragraph'][0]['content']);
+
+                document.title = data['t1'];
+                $(".t1").text(data['t1']);
+            },
+            error: function(xhr, status, error)
+            {
+                alert(error);
+            },
+        });
+    </script>
+</body>
 </html>
