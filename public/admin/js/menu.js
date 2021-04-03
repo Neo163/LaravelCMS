@@ -215,7 +215,7 @@ function get_menu(data, tag = 'dd-list')
 
       html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
-      html += '<a href="http://'+location.host+'/tc/'+data[key]['link']+'" target="_blank" class="titleText"><i class="uil uil-external-link-alt font-size-18"></i></a>';
+      html += '<a href="http://'+location.host+'/'+data[key]['link']+'" target="_blank" class="titleText"><i class="uil uil-external-link-alt font-size-18"></i></a>';
 
       html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
@@ -261,7 +261,7 @@ function createMenu(data)
 
   html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
-  html += '<a href="http://'+location.host+'/tc/'+data['link']+'" target="_blank" class="titleText"><i class="uil uil-external-link-alt font-size-18"></i></a>';
+  html += '<a href="http://'+location.host+'/'+data['link']+'" target="_blank" class="titleText"><i class="uil uil-external-link-alt font-size-18"></i></a>';
 
   html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
