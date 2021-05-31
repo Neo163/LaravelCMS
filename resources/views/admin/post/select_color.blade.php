@@ -3,13 +3,13 @@
         <div class="card">
             <div class="card-body">
 
-                <div style="color:#990000;font-size: 14.4px;">网站红色14.4px</div>
-                <div style="color:#990000;font-size: 16px;">网站红色16px</div>
-                <div style="color:#990000;font-size: 20px;">网站红色20px</div>
-                <div style="color:#990000;font-size: 25px;">网站红色25px</div>
-                <div style="color:#990000;font-size: 30px;">网站红色30px</div>
-                <div style="color:#990000;font-size: 35px;">网站红色35px</div>
-                <div style="color:#990000;font-size: 40px;">网站红色40px</div>
+                <div style="color:#0000FF;font-size: 14.4px;">Blue 14.4px</div>
+                <div style="color:#0000FF;font-size: 16px;">Blue 16px</div>
+                <div style="color:#0000FF;font-size: 20px;">Blue 20px</div>
+                <div style="color:#0000FF;font-size: 25px;">Blue 25px</div>
+                <div style="color:#0000FF;font-size: 30px;">Blue 30px</div>
+                <div style="color:#0000FF;font-size: 35px;">Blue 35px</div>
+                <div style="color:#0000FF;font-size: 40px;">Blue 40px</div>
                 
                 <div style="color:#708090;font-size: 16px;">SlateGray</div>
                 <div style="color:#00FFFF;font-size: 16px;">Aqua</div>
@@ -60,7 +60,7 @@
 <!-- <script>
     function copy_color(copy_link, position)
     {
-        console.log("<span style='color:#990000;'>#990000</span>");
+        console.log("<span style='color:#0000FF;'>#0000FF</span>");
         var link = copy_link;
         var timestamp = (new Date()).valueOf();
 
