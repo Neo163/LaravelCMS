@@ -35,7 +35,7 @@
                                     
                                         <div class="form-group">
                                             <label for="name">用户名</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="" value="test1">
                                         </div>
                 
                                         <div class="form-group">
@@ -43,7 +43,7 @@
                                                 <a href="auth-recoverpw.html" class="text-muted">Forgot password?</a>
                                             </div> -->
                                             <label for="userpassword">密码</label>
-                                            <input type="password" class="form-control" id="password" name="password" placeholder="">
+                                            <input type="password" class="form-control" id="password" name="password" placeholder="" value="123456">
                                         </div>
                 
                                         <!-- <div class="custom-control custom-checkbox">

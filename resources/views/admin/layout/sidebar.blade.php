@@ -233,20 +233,6 @@
                 </li>
                 @endcan
 
-                <!-- <li>
-                    <a href="/admin/comments" class="waves-effect">
-                        <i class="uil-calender"></i>
-                        <span>评论</span>
-                    </a>
-                </li> -->
-
-                <li>
-                    <a href="https://analytics.google.com/analytics/web/?authuser=1" target="_blank" class="waves-effect">
-                        <i class="uil-signal-alt-3"></i>
-                        <span>Google分析</span>
-                    </a>
-                </li>
-
                 <li class="menu-title"></li>
 
                 <li>
