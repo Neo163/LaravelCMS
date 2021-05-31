@@ -72,7 +72,8 @@
             {
                 // 获取到文件列表
                 var files = $('input[name="files"]').prop('files');
-
+                console.log(files[0]);
+                
                 var form = new FormData();
                 form.append("select_file", files[0]);
                 form.append("b_user_id", 1);

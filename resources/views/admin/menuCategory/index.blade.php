@@ -449,7 +449,7 @@
 
                                 <div class="col-sm-10">
                                     <select class="form-control select21" name="bMenuCategory" id="bMenuCategory">
-                                        <option value="1">未分类</option>
+                                        <option value="1">未小类</option>
                                         @foreach($menuCategory as $menuCategory)
                                         <option value="{{$menuCategory->id}}">{{$menuCategory->title}}</option>
                                         @endforeach

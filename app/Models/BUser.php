@@ -40,14 +40,6 @@ class BUser extends Authenticatable
     }
 
     /*
-     * 一个用户对应的角色
-     */
-    public function roles1()
-    {
-        return $this->belongsToMany(\App\Models\BRole::class, 'b_role_user', 'user_id', 'role_id')->withPivot(['user_id', 'role_id']);
-    }
-
-    /*
      * 是否有某个角色
      */
     public function isInRoles($roles)

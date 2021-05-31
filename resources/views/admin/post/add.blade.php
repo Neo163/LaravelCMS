@@ -57,7 +57,7 @@
                             <div class="col-12">
                                 <div class="page-title-box d-flex align-items-center justify-content-between">
                                     <h4 class="mb-0">
-                                        新增循环页 
+                                        新增@if($bPostType->id != 1)循环页@else专题页@endif
                                         &nbsp;&nbsp; | &nbsp;&nbsp;
                                         <span type="button" id="hidePostContent" class="mb-0 btn btn-outline-primary waves-effect waves-light postContentText">隐藏主体</span>
                                         &nbsp;&nbsp;
@@ -89,7 +89,7 @@
                                         <ol class="breadcrumb m-0">
                                             <li class="breadcrumb-item"><a href="/admin/dashboard">概览</a></li>
                                             <li class="breadcrumb-item"><a href="/admin/posts">循环页</a></li>
-                                            <li class="breadcrumb-item active">新增循环页</li>
+                                            <li class="breadcrumb-item active">新增@if($bPostType->id != 1)循环页@else专题页@endif</li>
                                         </ol>
                                     </div>
 
@@ -132,83 +132,11 @@
                                     <!-- 主体内容 -->
                                     @include('admin.post.main_add')
 
-                                    <div class="card">
-                                        <a href="#ContentBox1" class="text-dark" data-toggle="collapse">
-                                            <div class="p-4">
-                                                
-                                                <div class="media align-items-center">
-                                                    <div class="media-body overflow-hidden">
-                                                        <h5 class="font-size-16 mb-1">分类+标签</h5>
-                                                    </div>
-                                                    <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
-                                                </div>
-                                                
-                                            </div>
-                                        </a>
-
-                                        <div id="ContentBox1" class="collapse show">
-                                            <div class="p-4 border-top">
-
-                                                <div class="row">
-
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group mb-4">
-                                                            <label for="billing-name">分类</label>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div class="menu">
-                                                                        <center>
-                                                                            <div class="dd dd-category" id="nestable-posts-category">
-                                                                                <div id="get_posts_category"></div>
-                                                                            </div>
-
-                                                                          <input type="hidden" id="nestable-output-media-category">
-
-                                                                        </center>
-                                                                    </div>
-                                                                </div>
-                                                                
-                                                                <input type="hidden" id="b_posts_type_id" name="b_posts_type_id" value="{{$bPostType->id}}">
-
-                                                                <input type="hidden" id="b_posts_tag_id" name="b_posts_tag_id" value="{{$bPostType->id}}">
-
-                                                                <input type="hidden" id="selectCategoryValue" name="selectCategoryValue">
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group mb-4">
-                                                            <label for="billing-name">标签</label>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div class="menu">
-                                                                        <center>
-                                                                            <div class="dd dd-tag" id="nestable-media-tag">
-                                                                                <div id="get_posts_tag"></div>
-                                                                            </div>
-
-                                                                          <input type="hidden" id="nestable-output-media-tag">
-
-                                                                        </center>
-                                                                    </div>
-                                                                </div>
-
-                                                                <input type="hidden" id="select_tag" name="select_tag">
-                                                                
-                                                                <input type="hidden" id="selectTagValue" name="selectTagValue">
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @if($bPostType->id != 1)
+                                    <script>
+                                        $("#postCatTag").css('display','block');
+                                    </script>
+                                    @endif
 
                                     <!-- 文字 -->
                                     <div id="content_box_text" style="display: none;">
@@ -281,13 +209,13 @@
                                                                 <label for="billing-name">图片1</label>
                                                                 <div class="row">
                                                                     <div class="col-lg-3">
-                                                                        <button type="button" class="btn btn-outline-primary waves-effect waves-light" target="media1" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go('media1')">
+                                                                        <button type="button" class="btn btn-outline-primary waves-effect waves-light" target="media1" data-toggle="modal" data-target=".media-modal-xl" onclick="go('media1')">
                                                                             <i class="uil uil-image font-size-18"></i>
                                                                         </button>
                                                                     </div>
 
                                                                     <div class="col-lg-9">
-                                                                        <img class="media1A" target="media1" data-toggle="modal" data-target=".bs-example-modal-xl" src="" width="100%" name="data[media1A]">
+                                                                        <img class="media1A" target="media1" data-toggle="modal" data-target=".media-modal-xl" src="" width="100%" name="data[media1A]">
 
                                                                         <input type="text" id="media1" name="data[media1]" value="">
                                                                     </div>
@@ -332,10 +260,10 @@
                                                                 <div class="card-body videoBox">
                                     
                                                                     <div class="videoBox1">
-                                                                        <span class="video-title" data-toggle="modal" data-target=".bs-example-modal-xl">视频 1</span>
+                                                                        <span class="video-title" data-toggle="modal" data-target=".media-modal-xl">视频 1</span>
                                                                         <span class="video-description">默认比例：16:9</span>
 
-                                                                        <button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go('video1')">
+                                                                        <button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".media-modal-xl" onclick="go('video1')">
                                                                             <i class="uil uil-image font-size-18"></i>
                                                                         </button>
                                                                     </div>
@@ -356,9 +284,9 @@
                                                                 <div class="card-body videoBox">
 
                                                                     <div class="videoBox1">
-                                                                        <span class="video-title" data-toggle="modal" data-target=".bs-example-modal-xl">封面图 1</span>
+                                                                        <span class="video-title" data-toggle="modal" data-target=".media-modal-xl">封面图 1</span>
 
-                                                                        <button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go('videoImage1')">
+                                                                        <button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".media-modal-xl" onclick="go('videoImage1')">
                                                                             <i class="uil uil-image font-size-18"></i>
                                                                         </button>
                                                                     </div>
@@ -367,7 +295,7 @@
                                                                         <div class="col-lg-2">
                                                                         </div>
                                                                         <div class="col-lg-8">
-                                                                            <img class="videoImage1A" target="videoImage1" data-toggle="modal" data-target=".bs-example-modal-xl" src="" width="100%" name="data[videoImage1A]">
+                                                                            <img class="videoImage1A" target="videoImage1" data-toggle="modal" data-target=".media-modal-xl" src="" width="100%" name="data[videoImage1A]">
                                                                         </div>
                                                                     </div>
 
@@ -414,7 +342,7 @@
                                                                 <div class="card-body">
                                     
                                                                     <div class="sliderBox">
-                                                                        <span class="video-title" data-toggle="modal" data-target=".bs-example-modal-xl">模拟效果</span>
+                                                                        <span class="video-title" data-toggle="modal" data-target=".media-modal-xl">模拟效果</span>
                                                                     </div>
                                     
                                                                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -484,23 +412,47 @@
             </div>
             <!-- end main content-->
 
-            <div class="card mfp-hide mfp-popup-form mx-auto" id="test-form">
-                <div class="card-body">
-                    include('admin.page.templates.sidebar_edit_select_media')
-                </div>
-            </div>
-
-            <div class="modal fade1 bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+            <div class="modal fade1 media-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered lg-modal">
                     <div class="modal-content" style="min-height: 610px;">
                         <div class="modal-header">
-                            <h5 class="modal-title mt-0" id="myExtraLargeModalLabel">选择媒体</h5>
+                            <h5 class="modal-title mt-0" id="myExtraLargeModalLabel">选择媒体&nbsp;&nbsp; | &nbsp;&nbsp;</h5>
+                            <span class="uploadBoxText selectMediaText">媒体</span>
+                            <span class="uploadBoxText uploadMediaText">上传</span>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            @include('admin.page.select_media')
+                            <div class="selectMediaBox">
+                                @include('admin.post.select_media')
+                            </div>
+
+                            <div class="uploadMediaBox" style="display: none;">
+                                @include('admin.layout.upload_media')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade1 media-color-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered lg-modal modal-color">
+                    <div class="modal-content" style="min-height: 610px;">
+                        <div class="modal-header">
+                            <h5 class="modal-title mt-0" id="myExtraLargeModalLabel">
+                                选择颜色
+                                &nbsp;&nbsp; | &nbsp;&nbsp;
+                                <span class="red size14">复制选择的颜色字，粘贴到编辑器中，然后在中间加入无颜色的字，删除傍边多余的字</span>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="selectMediaBox">
+                                @include('admin.post.select_color')
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -510,17 +462,15 @@
         <!-- END layout-wrapper -->
 
         <!-- The Modal 1 posts category -->
-        <div class="modal fade" id="addItem">
+        <!-- <div class="modal fade" id="addItem">
             <div class="modal-dialog modal-dialog-centered modal-lg">
               <div class="modal-content">
               
-                <!-- Modal Header -->
                 <div class="modal-header">
                   <h4 class="modal-title">新增循环页标签</h4>
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 
-                <!-- Modal body -->
                 <div class="modal-body">
                     <div class="form">
 
@@ -532,7 +482,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="title" class="col-sm-2 col-form-label">媒体分类</label>
+                            <label for="title" class="col-sm-2 col-form-label">媒体小类</label>
                             <div class="col-sm-10">
                               <select class="form-control" id="b_posts_type_id" name="b_posts_type_id">
                                 @foreach($bPostTypes as $bPostType)
@@ -547,7 +497,6 @@
                     </div>
                 </div>
                 
-                <!-- Modal footer -->
                 <div class="modal-footer">
                   <span type="button" class="btn btn-primary w-md" data-dismiss="modal" id="submit">提交</span>
                   <span type="button" class="btn btn-secondary w-md" data-dismiss="modal" id="reset">取消</span>
@@ -555,7 +504,7 @@
                 
               </div>
             </div>
-        </div>
+        </div> -->
 
         <button type="button" class="btn btn-primary btn-lg btn-block1 waves-effect waves-light release-menu" id="copy-link" hidden></button>
 
@@ -570,8 +519,6 @@
         <script src="/assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
         <script src="/assets/js/pages/lightbox.init.js"></script>
 
-        <!-- Summernote js -->
-        <script src="/assets/libs/summernote/summernote-bs4.min.js"></script>
         <!-- init js -->
         <script src="/assets/js/pages/form-editor.init.js"></script>
 
@@ -580,9 +527,17 @@
 
         <script src="/assets/js/app.js"></script>
 
+        @if($bData['editor'] == 2)
+        <script src="/editor/weditor4/wangEditor.min.js"></script>
+        <script src="/admin/js/editor2.js"></script>
+        @else
+        <script src="/assets/libs/summernote/summernote-bs4.min.js"></script>
+        <script src="/admin/js/editor1.js"></script>
+        @endif
+
         <script src="/resources/js/jquery.nestable.js"></script>
-        <script src="/admin/js/post_add_edit.js"></script>
         <script src="/admin/js/post_add.js"></script>
+        <script src="/admin/js/post_add_edit.js"></script>
         <script src="/admin/js/post_category_tag.js"></script>
         <script src="/admin/js/select_media.js"></script>
 

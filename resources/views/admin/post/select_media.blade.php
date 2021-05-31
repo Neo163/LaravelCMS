@@ -2,6 +2,7 @@
     <div class="sizeBox col-lg-9">
         <div class="card">
             <div class="card-body">
+                
                 <!-- <div class="row mb-2">
                     <div class="col-md-6">
                     </div>
@@ -13,8 +14,8 @@
                             </button>
                             <div class="dropdown-menu">
                                 <span id="nestable-media">
-                                    <span class="dropdown-item pointer" data-action="expand-all">扩展媒体分类</span>
-                                    <span class="dropdown-item" data-action="collapse-all">折合媒体分类</span>
+                                    <span class="dropdown-item pointer" data-action="expand-all">扩展媒体小类</span>
+                                    <span class="dropdown-item" data-action="collapse-all">折合媒体小类</span>
                                 </span>
                             </div>
                         </div>
@@ -26,7 +27,7 @@
                 <div class="row mt-4">
                     <div class="col-sm-6">
                         <div>
-                            <!-- <p class="mb-sm-0">当页分类有{{$bData['end_media']}}? 个媒体，后端媒体一共有 {{$bData['allCount']}} 个</p> -->
+                            <!-- <p class="mb-sm-0">当页小类有{{$bData['end_media']}}? 个媒体，后端媒体一共有 {{$bData['allCount']}} 个</p> -->
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -48,25 +49,6 @@
 
     <div class="col-lg-3" id="MediaCategory">
         <div class="card MediaCategoryCard">
-            <!-- <div class="page-select-media-category">
-                <center>媒体分类</center>
-            </div> -->
-
-            <span id="nestable-media">
-
-                <button type="button" class="btn btn-outline-primary btn-block waves-effect waves-light" onclick="media_all()">
-                    全部媒体
-                </button>
-
-                <button type="button" class="btn btn-outline-success btn-block waves-effect waves-light media-category-expand-all" data-action="expand-all-media">扩展</button>
-
-                <button type="button" class="btn btn-outline-success btn-block waves-effect waves-light media-category-collapse-all" data-action="collapse-all-media">折合</button>
-
-            </span>
-
-            <!-- <div class="btn btn-outline-success btn-block waves-effect waves-light" class="allMedia">
-                
-            </div> -->
 
             <div class="space-20"></div>
             

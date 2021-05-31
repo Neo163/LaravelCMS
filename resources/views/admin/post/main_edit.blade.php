@@ -2,17 +2,108 @@
     <div class="col-lg-8">
 
         <div class="media-uplaod">
-            <button type="button" class="btn btn-outline-primary waves-effect waves-light media-editor" data-toggle="modal" data-target=".bs-example-modal-xl">媒体</button>
+            <button type="button" class="btn btn-outline-primary waves-effect waves-light media-editor" data-toggle="modal" data-target=".media-modal-xl">媒体</button>
+
+            <span class="right">
+                <button type="button" class="btn btn-outline-primary waves-effect waves-light media-color" data-toggle="modal" data-target=".media-color-modal-xl">颜色</button>
+            </span>
         </div>
 
         <div class="form-group mb-4">
-            <!-- <textarea id="content" name="content" style="height:600px;"  placeholder=""></textarea> -->
-
-            <div id="summernote"></div>
             
             <input type="hidden" name="content" id="content" value="{{$bpost->content}}">
 
+            @if($bData['editor'] == 2)
+            <div id="Weditor"></div>
+            <script>
+                var content = $("#content").val();
+                $("#Weditor").html(content);
+            </script>
+            @else
+            <div id="summernote"></div>
+            <script>
+                var content = $("#content").val();
+                $("#summernote").html(content);
+            </script>
+            @endif
+
         </div>
+
+        <input type="text" id="b_posts_type_id" name="b_posts_type_id" value="{{$bPostType->id}}" hidden>
+
+        <div class="card" id="postCatTag" style="display: none;">
+            <a href="#ContentBox1" class="text-dark" data-toggle="collapse">
+                <div class="p-4">
+                    
+                    <div class="media align-items-center">
+                        <div class="media-body overflow-hidden">
+                            <h5 class="font-size-16 mb-1">小类+标签</h5>
+                        </div>
+                        <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                    </div>
+                    
+                </div>
+            </a>
+
+            <div id="ContentBox1" class="collapse show">
+                <div class="p-4 border-top">
+
+                    <div class="row">
+
+                        <div class="col-lg-6">
+                            <div class="form-group mb-4">
+                                <label for="billing-name">小类</label>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="menu">
+                                            <center>
+                                                <div class="dd dd-category" id="nestable-posts-category">
+                                                    <div id="get_posts_category" style='max-height: 500px;overflow: auto;'></div>
+                                                </div>
+
+                                              <input type="text" id="nestable-output-media-category" hidden>
+
+                                            </center>
+                                        </div>
+                                    </div>
+                                    
+                                    <input type="text" id="selectCategoryValue" name="selectCategoryValue" value="{{$catCount}}" hidden>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group mb-4">
+                                <label for="billing-name">标签</label>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="menu">
+                                            <center>
+                                                <div class="dd dd-tag" id="nestable-media-tag">
+                                                    <div id="get_posts_tag" style='max-height: 500px;overflow: auto;'></div>
+                                                </div>
+
+                                              <input type="text" id="nestable-output-media-tag" hidden>
+
+                                            </center>
+                                        </div>
+                                    </div>
+
+                                    <input type="text" id="b_posts_tag_id" name="b_posts_tag_id" value="{{$bPostType->id}}" hidden>
+
+                                    <input type="text" id="selectTagValue" name="selectTagValue" value="{{$tagCount}}" hidden>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="col-lg-4">
@@ -24,7 +115,7 @@
                         
                         <div class="media align-items-center">
                             <div class="media-body overflow-hidden">
-                                <h5 class="font-size-16 mb-1">前端模板</h5>
+                                <h5 class="font-size-16 mb-1">状态</h5>
                             </div>
                             <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
                         </div>
@@ -42,9 +133,83 @@
                                     <div class="form-group mb-4">
                                         <div class="row">
                                             <div class="col-lg-12">
+                                                <label for="formrow-firstname-input">发布状态</label>
+                                                <select class="form-control" id="public" name="public">
+                                                    <option value="public">发布</option>
+                                                    <option value="draft">草稿</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label for="formrow-firstname-input">前端模板</label>
                                                 <select class="form-control" id="front_end_template" name="front_end_template">
-                                                <!-- <option value=""></option> -->
-                                            </select>
+                                                    <!-- <option value=""></option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @if($_SERVER['REQUEST_URI'] == '/admin/post/type/add/1' || substr($_SERVER['REQUEST_URI'] , 0 , 24) == '/admin/post/type/edit/1/')
+                                    <div class="form-group mb-4" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label for="formrow-firstname-input">页面大类：<span class="red">基于可能涉及数据关联性，不建议修改</span></label>
+                                                <select class="form-control" id="b_posts_type" name="b_posts_type">
+                                                    <option value="1">专题页</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @else
+                                    <div class="form-group mb-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label for="formrow-firstname-input">页面大类：<span class="red">基于可能涉及数据关联性，不建议修改</span></label>
+                                                <select class="form-control" id="b_posts_type" name="b_posts_type">
+                                                    @foreach($bPostTypes as $bPostType)
+                                                    <option value="{{$bPostType->id}}">{{$bPostType->title}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+
+                                    <!-- <div class="form-group mb-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label for="formrow-firstname-input">评论</label>
+                                                <select class="form-control" id="ranking" name="ranking">
+                                                    <option value="0">开启</option>
+                                                    <option value="1">关闭</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                    <div class="form-group mb-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label for="formrow-firstname-input">置顶</label>
+                                                <select class="form-control" id="ranking" name="ranking">
+                                                    <option value="0">否</option>
+                                                    @for($i=1; $i<11; $i++)
+                                                    <option value="{{$i}}">{{$i}}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label for="formrow-firstname-input">标记</label>
+                                                <input type="text" class="form-control" name="remark" id="remark" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -58,7 +223,51 @@
             </div>
 
             <div class="card">
-                <a href="#rightBox1" class="text-dark" data-toggle="collapse">
+                <a href="#rightBox2" class="text-dark" data-toggle="collapse">
+                    <div class="p-4">
+                        
+                        <div class="media align-items-center">
+                            <div class="media-body overflow-hidden">
+                                <h5 class="font-size-16 mb-1">横幅</h5>
+                            </div>
+                            <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                        </div>
+                        
+                    </div>
+                </a>
+
+                <div id="rightBox2" class="collapse show">
+                    <div class="p-4 border-top">
+                        <div class="row">
+
+                            <div class="col-lg-12">
+
+                                <div class="form-group mb-4">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <button type="button" class="btn btn-outline-primary waves-effect waves-light media-upload" target="banner" data-toggle="modal" data-target=".media-modal-xl" onclick="go('banner')">
+                                                <i class="uil uil-image font-size-18"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <img class="bannerA" target="banner" data-toggle="modal" data-target=".media-modal-xl" src="" width="100%" name="bannerA" onclick="go('banner')">
+
+                                            <input type="text" id="banner" name="banner" value="" hidden>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <a href="#rightBox3" class="text-dark" data-toggle="collapse">
                     <div class="p-4">
                         
                         <div class="media align-items-center">
@@ -71,7 +280,7 @@
                     </div>
                 </a>
 
-                <div id="rightBox1" class="collapse show">
+                <div id="rightBox3" class="collapse show">
                     <div class="p-4 border-top">
                         <div class="row">
 
@@ -81,13 +290,13 @@
                                     <div class="form-group mb-4">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <button type="button" class="btn btn-outline-primary waves-effect waves-light media-upload" target="image" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go('image')">
+                                                <button type="button" class="btn btn-outline-primary waves-effect waves-light media-upload" target="image" data-toggle="modal" data-target=".media-modal-xl" onclick="go('image')">
                                                     <i class="uil uil-image font-size-18"></i>
                                                 </button>
                                             </div>
 
                                             <div class="col-lg-12">
-                                                <img class="imageA" target="image" data-toggle="modal" data-target=".bs-example-modal-xl" src="" width="100%" name="imageA" onclick="go('image')">
+                                                <img class="imageA" target="image" data-toggle="modal" data-target=".media-modal-xl" src="" width="100%" name="imageA" onclick="go('image')">
 
                                                 <input type="text" id="image" name="image" value="" hidden>
                                             </div>

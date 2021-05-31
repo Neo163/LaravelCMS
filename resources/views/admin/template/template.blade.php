@@ -90,7 +90,7 @@
                                                   <tr>
                                                     <th scope="col">标题</th>
                                                     <th scope="col">模板</th>
-                                                    <th scope="col">分类</th>
+                                                    <th scope="col">小类</th>
                                                     <th scope="col" style="width: 200px;">操作</th>
                                                   </tr>
                                                 </thead>

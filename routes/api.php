@@ -60,20 +60,18 @@ Route::group(['middleware' => ['cors', /*'auth:web'*/] ], function ()
 	Route::post('/admin/media/delete', '\App\Admin\Controllers\MediaController@delete');
 	Route::post('/admin/media/update', '\App\Admin\Controllers\MediaController@update');
 
-	Route::post("/media/mediaUpload", "\App\Admin\Controllers\MediaController@mediaUploadApi");
+	Route::post("/admin/media_upload/status", "\App\Admin\Controllers\MediaController@mediaUpdloadStatus");
 
 	Route::get('/admin/media/select/data', '\App\Admin\Controllers\MediaController@mediaData');
 	Route::get('/admin/media/select/category/{category}', '\App\Admin\Controllers\MediaController@mediaCategory');
 
-	// page
-	Route::post('/admin/page/content/status/{bpage}', '\App\Admin\Controllers\PageController@contentStatus');
-	Route::get('/admin/page/edit', '\App\Admin\Controllers\PageController@editData');
-
-	Route::post('/admin/page/delete', '\App\Admin\Controllers\PageController@delete');
+	Route::post("/media/mediaUpload", "\App\Admin\Controllers\MediaController@mediaUploadApi");
 
 	// post
 	Route::post('/admin/post/content/status/{bpost}', '\App\Admin\Controllers\PostController@contentStatus');
 	Route::get('/admin/post/edit', '\App\Admin\Controllers\PostController@editData');
+	Route::post('/admin/post/copy', '\App\Admin\Controllers\PostController@copy');
+	Route::post('/admin/post/display/content/type', '\App\Admin\Controllers\PostController@displayContentType');
 
 	Route::post('/admin/post/delete', '\App\Admin\Controllers\PostController@delete');
 
@@ -98,6 +96,12 @@ Route::group(['middleware' => ['cors', /*'auth:web'*/] ], function ()
 	Route::get('/admin/template/data/templates', '\App\Admin\Controllers\TemplateController@data');
 	Route::post('/admin/template/delete', '\App\Admin\Controllers\TemplateController@delete');
 
+	// comment
+	Route::post('/admin/comment/check', '\App\Admin\Controllers\CommentController@check');
+	Route::post('/admin/comment/delete', '\App\Admin\Controllers\CommentController@delete');
+
+	Route::post('/comment/create', '\App\Http\Controllers\CommentController@create');
+	Route::post('/comment/report', '\App\Http\Controllers\CommentController@report');
 
 	// test
 	Route::post('/sorting', '\App\Admin\Controllers\DemoController@sorting');

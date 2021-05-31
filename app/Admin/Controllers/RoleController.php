@@ -108,6 +108,8 @@ class RoleController extends Controller
 		$permissions = BPermission::findMany(request('permissions'));
 		$myPermissions = $role->permissions;
 
+		return $permissions;
+
 		// 对已经有的权限
 		$addPermissions = $permissions->diff($myPermissions);
 		foreach($addPermissions as $permission) 

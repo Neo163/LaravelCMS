@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use Illuminate\Http\Request;
 use \App\Models\BMedia;
 use \App\Models\BMediaCategory;
+use \App\Models\BSetting;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,7 +23,11 @@ class MediaController extends Controller
         $allSize = $allSize/(1024*1024*1024);
         $allSize =  round($allSize, 4).'G';
 
-    	return view('admin.media.media', compact('media', 'mediaCategories', 'bData', 'allSize'));
+        $setting_media_upload = BSetting::where('title', 'media_upload_box')->first();
+
+        // return $setting_media_upload->status;
+
+    	return view('admin.media.media', compact('media', 'mediaCategories', 'bData', 'allSize', 'setting_media_upload'));
     }
 
     public function category(BMediaCategory $bMediaCategory)
@@ -37,21 +42,23 @@ class MediaController extends Controller
         $allSize = $allSize/(1024*1024*1024);
         $allSize =  round($allSize, 4).'G';
 
-        return view('admin.media.media', compact('media', 'mediaCategories', 'bData', 'allSize'));
+        $setting_media_upload = BSetting::where('title', 'media_upload_box')->first();
+
+        return view('admin.media.media', compact('media', 'mediaCategories', 'bData', 'allSize', 'setting_media_upload'));
     }
 
-    public function mediaUploadApi(Request $request)
+    public function mediaUploadApi(Request $request, $fileName = 'select_file')
     {
         // check key
-        $this->validate($request, [
-            'select_file'  => 'required|mimes:jpg,jpeg,png,gif,mp3,mp4,mkv,wmv,xlsx,xls,doc,docx,txt,sql,zip,rar,7z,tar,gz,iso'
-            // 'select_file'  => 'required|max:102400'
-        ]);
+        // $this->validate($request, [
+        //     'select_file'  => 'required|mimes:jpg,jpeg,png,gif,mp3,mp4,mkv,wmv,xlsx,xls,doc,docx,txt,sql,zip,rar,7z,tar,gz,iso'
+        //     // 'select_file'  => 'required|max:102400'
+        // ]);
 
         $month = date('Y-m');
         // return $request->file('select_file')->store("public/media/".date('Y-m'));
 
-        $size_count = $request->file('select_file')->getSize();
+        $size_count = $request->file($fileName)->getSize();
         
         if($size_count < 1024)
         {
@@ -78,13 +85,13 @@ class MediaController extends Controller
             $media_category = request('media_category');
         }
 
-        $extension = $request->file('select_file')->getClientOriginalExtension();
-        $filename = $request->file('select_file')->getClientOriginalName();
+        $extension = $request->file($fileName)->getClientOriginalExtension();
+        $filename = $request->file($fileName)->getClientOriginalName();
         
         // $filenametostore = 'bMedia_'.date('Ymd_His').'_'.$filename;
         $filenametostore = 'bMedia_'.date('Ymd_His').'.'.$extension;
         $file_link = '/public/media/'.$month.'/'.$filenametostore;
-        Storage::put($file_link, fopen($request->file('select_file'), 'r+'), 'public');
+        Storage::put($file_link, fopen($request->file($fileName), 'r+'), 'public');
 
         $name = substr($filename,0,strrpos($filename,"."));
 
@@ -167,6 +174,13 @@ class MediaController extends Controller
         ]);
 
         return redirect("/admin/media/category/".request('media_category'))->with('success', '成功上传文件');
+    }
+
+    public function imageUpload(Request $request)
+    {
+        $data = $this->mediaUploadApi($request, 'wangEditorH5File');
+
+        return asset('storage/media/'.$data['month'].'/'.$data['fix_link']);
     }
 
     public function update()
@@ -299,5 +313,33 @@ class MediaController extends Controller
         $data['media'] = BMedia::where( 'b_media_category_id', request('category') )->orderBy('created_at', 'desc')->get();
 
         return $data;
+    }
+
+    public function mediaUpdloadStatus()
+    {
+
+        $updateKey = 'updateAEzBQMmYg1asfsd@#$%%%dsfdsASDFDSFS1888111Media';
+        $updateKey1 = 'update111eAEzBdf#@$#vddds!@$#$#@$aaaASDFDSF111111333gq111Media';
+
+        if ( request('updateKey') == $updateKey && request('updateKey1') == $updateKey1 )
+        {
+            if(request('status') == 0)
+            {
+                BSetting::where( 'title', 'media_upload_box' )->first()->update([
+                    'status' => 0,
+                ]);
+
+                return 0;
+            }
+
+            if(request('status') == 1)
+            {
+                BSetting::where( 'title', 'media_upload_box' )->first()->update([
+                    'status' => 1,
+                ]);
+
+                return 1;
+            }
+        }
     }
 }

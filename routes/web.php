@@ -13,14 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', '\App\Http\Controllers\IndexController@index');
+Route::group(['middleware' => 'setting'], function ()
+{
+	Route::get('/', '\App\Http\Controllers\IndexController@index');
 
-Route::get('/about', '\App\Http\Controllers\PageController@about');
+	Route::get('/post/{bPostType}/{bPost}', '\App\Http\Controllers\PostController@detail');
 
-Route::get('/post', '\App\Http\Controllers\PostController@index');
+	Route::get('/test/{btest}', '\App\Http\Controllers\PostController@detail');
 
-Route::get('/post/{bpost}', '\App\Http\Controllers\PostController@detail');
+	Route::get('/mail','\App\Http\Controllers\MailController@qqEmail');
+	Route::get('/email', '\App\Http\Controllers\MailController@gmail');
 
-Route::get('/test/{btest}', '\App\Http\Controllers\PostController@detail');
-
-include_once('admin.php');
+	include_once('admin.php');
+});

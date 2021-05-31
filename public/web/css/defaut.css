@@ -1,0 +1,19 @@
+.draft {
+	position: fixed;
+    right: 8%;
+    top: 2%;
+    padding: 8px 20px;
+    background: yellow;
+    border-radius: 5px;
+    z-index: 1;
+    font-size: 18px;
+}
+
+#commentBtn {
+    padding: 5px 10px;
+    background: blue;
+    display: initial;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}

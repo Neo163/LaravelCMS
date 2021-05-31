@@ -1,7 +1,10 @@
-var content = $("#content").val();
-$("#summernote").html(content);
-
-slectTemplate(1);
+if($("#b_posts_type_id").val() == 1)
+{
+    slectTemplate(1);
+} else
+{
+    slectTemplate(2);
+}
 
 $('.addPageContent').click(function()
 {
@@ -36,7 +39,7 @@ function create_item(target, num, data = '')
 
             if(target == 'image')
             {
-                $("#content_"+target).append(imageItem(num, content_num_textNow, data['image'+i], data['image'+i+'-link']));
+                $("#content_"+target).append(imageItem(num, content_num_textNow, data['image'+i], data['image'+i+'_text1'], data['image'+i+'_text2'], data['image'+i+'_link']));
             }
 
             if(target == 'video')
@@ -76,7 +79,7 @@ function create_slider(target, numArr, data = '')
 
             for(j=1; j<=numArr['slider'+i]; j++)
             {
-                editSliderContent(i, data['slider'+i+'_'+j+'_image'], data['slider'+i+'_'+j+'_text1'], data['slider'+i+'_'+j+'_text2'], data['slider'+i+'_'+j+'_link']);
+                editSliderContent(i, data['slider'+i+'_'+j+'_image'], data['slider'+i+'_'+j+'_text1'], data['slider'+i+'_'+j+'_text2'], data['slider'+i+'_'+j+'_text3'], data['slider'+i+'_'+j+'_link']);
             }
         }
     }
@@ -127,7 +130,7 @@ function getTemplate(target, num = 0, data = '')
 
                                 if(target == 'image')
                                 {
-                                    $("#content_"+target).append(imageItem(num, content_num_textNow, data['image'+i], data['image'+i+'-link']));
+                                    $("#content_"+target).append(imageItem(num, content_num_textNow, data['image'+i], data['image'+i+'_text1'], data['image'+i+'_text2'], data['image'+i+'_link']));
                                 }
 
                                 if(target == 'video')
@@ -198,6 +201,7 @@ function slectTemplate(value)
 
                         $("#title").val(data['bpost']['title']);
 
+                        $("#banner").val(data['bpost']['banner']);
                         $("#image").val(data['bpost']['image']);
 
                         var imageSrc = '/storage/media/'+data['bpost']['image'];
@@ -208,32 +212,49 @@ function slectTemplate(value)
                         }
 
                         $('.imageA').attr('src', imageSrc);
-
                         $("#image").html(data['bpost']['image']);
 
+                        var bannerSrc = '/storage/media/'+data['bpost']['banner'];
+
+                        if(data['bpost']['banner'] == '' || data['bpost']['banner'] == null)
+                        {
+                            var bannerSrc = '';
+                        }
+
+                        $('.bannerA').attr('src', bannerSrc);
+                        $("#banner").html(data['bpost']['banner']);
+
+                        $("select[name='b_posts_type']").val(data['bpost']['b_posts_type_id']);
+                        $("select[name='public']").val(data['bpost']['public']);
                         $("select[name='front_end_template']").val(data['bpost']['template']);
+                        $("select[name='ranking']").val(data['bpost']['ranking']);
+                        $("#remark").val(data['bpost']['remark']);
 
-                        // categories and tags start
-                        var categories = data['categories'];
-                        var cat = '';
-                        for(var key in categories)
+                        console.log(data['bpost']['banner']);
+                        if(data['bpost']['b_posts_type_id'] != 1)
                         {
-                            cat = cat + ' ' + categories[key]['b_category_id'];
-                            $("#checkbox_category"+categories[key]['b_category_id']).prop("checked",true);
+                            // categories and tags start
+                            var categories = data['categories'];
+                            var cat = '';
+                            for(var key in categories)
+                            {
+                                cat = cat + ' ' + categories[key]['b_category_id'];
+                                $("#checkbox_category"+categories[key]['b_category_id']).prop("checked",true);
+                            }
+
+                            // $("#selectCategoryValue").val(cat);
+
+                            var tags = data['tags'];
+                            var tag = '';
+                            for(var key in tags)
+                            {
+                                tag = tag + ' ' + tags[key]['b_tag_id'];
+                                $("#checkbox_tag"+tags[key]['b_tag_id']).prop("checked",true);
+                            }
+
+                            // $("#selectTagValue").val(tag);
+                            // categories and tags end
                         }
-
-                        $("#selectCategoryValue").val(cat);
-
-                        var tags = data['tags'];
-                        var tag = '';
-                        for(var key in tags)
-                        {
-                            tag = tag + ' ' + tags[key]['b_tag_id'];
-                            $("#checkbox_tag"+tags[key]['b_tag_id']).prop("checked",true);
-                        }
-
-                        $("#selectTagValue").val(tag);
-                        // categories and tags end
 
                         var structure = data['bpost']['structure'];
                         structure = JSON.parse(structure);
@@ -252,6 +273,8 @@ function slectTemplate(value)
                         {
                             if(structure[targets[i]] > 0 && (targets[i] == 'text' || targets[i] == 'image' || targets[i] == 'video'))
                             {
+                                // console.log(targets[i]);
+                                // console.log(structure[targets[i]]);
                                 create_item(targets[i], structure[targets[i]], data[targets[i]]);
                             }
 
@@ -356,7 +379,7 @@ function removeItemSlider(target)
     }
 }
 
-function addSliderContent(position, data1 = '', data2 = '', data3 = '', data4 = '')
+function addSliderContent(position, data1 = '', data2 = '', data3 = '', data4 = '', data5 = '')
 {
     // var content_num_text = $("#content_num_slider").val();
 
@@ -367,11 +390,11 @@ function addSliderContent(position, data1 = '', data2 = '', data3 = '', data4 = 
     $("#number_slider"+position).text(num_now);
 
     // $("#slider_ol1").append(slider1Item(position, num_now, data['slider']));
-    $("#slider_content"+position).append(slider2Item(position, num_now, data1 = '', data2 = '', data3 = '', data4 = ''));
-    $("#accordion"+position).append(slider3Item(position, num_now, data1 = '', data2 = '', data3 = '', data4 = ''));
+    $("#slider_content"+position).append(slider2Item(position, num_now, data1 = '', data2 = '', data3 = '', data4 = '', data5 = ''));
+    $("#accordion"+position).append(slider3Item(position, num_now, data1 = '', data2 = '', data3 = '', data4 = '', data5 = ''));
 }
 
-function editSliderContent(position, data1, data2, data3, data4)
+function editSliderContent(position, data1, data2, data3, data4, data5)
 {
     // var content_num_text = $("#content_num_slider").val();
 
@@ -382,8 +405,8 @@ function editSliderContent(position, data1, data2, data3, data4)
     $("#number_slider"+position).text(num_now);
 
     // $("#slider_ol1").append(slider1Item(position, num_now, data['slider']));
-    $("#slider_content"+position).append(slider2Item(position, num_now, data1, data2, data3, data4));
-    $("#accordion"+position).append(slider3Item(position, num_now, data1, data2, data3, data4));
+    $("#slider_content"+position).append(slider2Item(position, num_now, data1, data2, data3, data4, data5));
+    $("#accordion"+position).append(slider3Item(position, num_now, data1, data2, data3, data4, data5));
 }
 
 function textItem(num, numNow, data = '')
@@ -416,7 +439,7 @@ function sliderItem(num, numNow, data = '')
     html += '<div class="card-body">';
 
     html += '<div class="sliderBox">';
-    html += '<span class="video-title" data-toggle="modal" data-target=".bs-example-modal-xl">轮播图'+numNow+' 的模拟效果</span>';
+    html += '<span class="video-title" data-toggle="modal" data-target=".media-modal-xl">轮播图'+numNow+' 的模拟效果</span>';
 
     html += '<span class="right margin-bottom-10">';
     html += '<a class="slider-left-btn" href="#carouselExampleIndicators'+numNow+'" role="button" data-slide="prev">';
@@ -481,7 +504,7 @@ function sliderItem(num, numNow, data = '')
     return html;
 }
 
-function imageItem(num, numNow, data1 = '', data2 = '')
+function imageItem(num, numNow, data1 = '', data2 = '', data3 = '', data4 = '')
 {
     var html = '';
 
@@ -489,34 +512,9 @@ function imageItem(num, numNow, data1 = '', data2 = '')
     html += '<div class="form-group mb-4">';
     html += '<label for="billing-name">图片'+numNow+'</label>';
 
-    // html += '<div class="row">';
-    // html += '<div class="col-lg-3">';
-    // html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light" target="image'+numNow+'" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go(\'image'+numNow+'\')">';
-    // html += '<i class="uil uil-image font-size-18"></i>';
-    // html += '</button>';
-    // html += '</div>';
-    // html += '<div class="col-lg-9">';
-    // // alert(data);
-
-    // if(data != null || data == '')
-    // {
-    //     dataSrc = '/storage/media/'+data;
-    // }
-
-    // if(data == null || data == '')
-    // {
-    //     dataSrc = '';
-    //     data = '';
-    // }
-
-    // html += '<img class="image'+numNow+'A" target="image'+numNow+'" data-toggle="modal" data-target=".bs-example-modal-xl" src="'+dataSrc+'" width="100%" name="data[image'+numNow+'A]" onclick="go(\'image'+numNow+'\')">';
-    // html += '<input type="text" id="image'+numNow+'" name="data[image'+numNow+']" value="'+data+'" hidden>';
-    // html += '</div>';
-    // html += '</div>';
-
     html += '<div class="row">';
     html += '<label for="title" class="col-sm-2 col-form-label">';
-    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light" target="image'+numNow+'" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go(\'image'+numNow+'\')">';
+    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light" target="image'+numNow+'" data-toggle="modal" data-target=".media-modal-xl" onclick="go(\'image'+numNow+'\')">';
     html += '<i class="uil uil-image font-size-18"></i>';
     html += '</button>';
     html += '</label>';
@@ -532,16 +530,45 @@ function imageItem(num, numNow, data1 = '', data2 = '')
         dataSrc = '';
         data1 = '';
     }
+
+    if(data2 == null || data2 == '')
+    {
+        data2 = '';
+    }
+
+    if(data3 == null || data3 == '')
+    {
+        data3 = '';
+    }
+
+    if(data4 == null || data4 == '')
+    {
+        data4 = '';
+    }
     
-    html += '<img class="image'+numNow+'A" target="image'+numNow+'" data-toggle="modal" data-target=".bs-example-modal-xl" src="'+dataSrc+'" width="100%" name="data[image'+numNow+'A]" onclick="go(\'image'+numNow+'\')">';
+    html += '<img class="image'+numNow+'A" target="image'+numNow+'" data-toggle="modal" data-target=".media-modal-xl" src="'+dataSrc+'" width="100%" name="data[image'+numNow+'A]" onclick="go(\'image'+numNow+'\')">';
     html += '<input type="text" id="image'+numNow+'" name="data[image'+numNow+']" value="'+data1+'" hidden>';
     html += '</div>';
     html += '</div>';
 
     html += '<div class="row image-link">';
-    html += '<label for="title" class="col-sm-2 col-form-label">其他</label>';
-    html += '<div class="col-sm-10">';
-    html += '<input type="text" class="form-control" id="image'+numNow+'-link" name="data[image'+numNow+'-link]" placeholder="" value="'+data2+'">';
+    html += '<label for="title" class="col-sm-3 col-form-label">文字1</label>';
+    html += '<div class="col-sm-9">';
+    html += '<input type="text" class="form-control" id="image'+numNow+'_text1" name="data[image'+numNow+'_text1]" placeholder="" value="'+data2+'">';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="row image-link">';
+    html += '<label for="title" class="col-sm-3 col-form-label">文字2</label>';
+    html += '<div class="col-sm-9">';
+    html += '<input type="text" class="form-control" id="image'+numNow+'_text2" name="data[image'+numNow+'_text2]" placeholder="" value="'+data3+'">';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="row image-link">';
+    html += '<label for="title" class="col-sm-3 col-form-label">链接</label>';
+    html += '<div class="col-sm-9">';
+    html += '<input type="text" class="form-control" id="image'+numNow+'_link" name="data[image'+numNow+'_link]" placeholder="" value="'+data4+'">';
     html += '</div>';
     html += '</div>';
 
@@ -562,10 +589,10 @@ function videoItem(num, numNow, data1 = '', data2 = '')
     html += '<div class="card-body videoBox">';
 
     html += '<div class="videoBox'+numNow+'">';
-    html += '<span class="video-title" data-toggle="modal" data-target=".bs-example-modal-xl">视频 '+numNow+'</span>';
+    html += '<span class="video-title" data-toggle="modal" data-target=".media-modal-xl">视频 '+numNow+'</span>';
     html += '<span class="video-description">默认比例：16:9</span>';
 
-    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go(\'video'+numNow+'\')">';
+    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".media-modal-xl" onclick="go(\'video'+numNow+'\')">';
     html += '<i class="uil uil-image font-size-18"></i>';
     html += '</button>';
     html += '</div>';
@@ -597,9 +624,9 @@ function videoItem(num, numNow, data1 = '', data2 = '')
     html += '<div class="card-body videoBox">';
 
     html += '<div class="videoBox'+numNow+'">';
-    html += '<span class="video-title" data-toggle="modal" data-target=".bs-example-modal-xl">封面图 '+numNow+'</span>';
+    html += '<span class="video-title" data-toggle="modal" data-target=".media-modal-xl">封面图 '+numNow+'</span>';
 
-    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go(\'videoImage'+numNow+'\')">';
+    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light right" target="media1" data-toggle="modal" data-target=".media-modal-xl" onclick="go(\'videoImage'+numNow+'\')">';
     html += '<i class="uil uil-image font-size-18"></i>';
     html += '</button>';
     html += '</div>';
@@ -620,7 +647,7 @@ function videoItem(num, numNow, data1 = '', data2 = '')
         data2 = '';
     }
 
-    html += '<img class="videoImage'+numNow+'A" target="videoImage'+numNow+'" data-toggle="modal" data-target=".bs-example-modal-xl" src="'+dataSrc+'" width="100%" onclick="go(\'videoImage'+numNow+'\')">';
+    html += '<img class="videoImage'+numNow+'A" target="videoImage'+numNow+'" data-toggle="modal" data-target=".media-modal-xl" src="'+dataSrc+'" width="100%" onclick="go(\'videoImage'+numNow+'\')">';
     html += '</div>';
     html += '</div>';
 
@@ -653,7 +680,7 @@ function slider1Item(position, numNow, data = '')
     return html;
 }
 
-function slider2Item(position, numNow, data1 = '', data2 = '', data3 = '', data4 = '')
+function slider2Item(position, numNow, data1 = '', data2 = '', data3 = '', data4 = '', data5 = '')
 {
     var html = '';
 
@@ -686,7 +713,7 @@ function slider2Item(position, numNow, data1 = '', data2 = '', data3 = '', data4
     return html;
 }
 
-function slider3Item(position, numNow, data1 = '', data2 = '', data3 = '', data4 = '')
+function slider3Item(position, numNow, data1 = '', data2 = '', data3 = '', data4 = '', data5 = '')
 {
     var html = '';
 
@@ -704,7 +731,7 @@ function slider3Item(position, numNow, data1 = '', data2 = '', data3 = '', data4
 
     html += '<div class="row">';
     html += '<div class="col-lg-3">';
-    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light" target="slider'+position+'_'+numNow+'_image" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="go(\'slider'+position+'_'+numNow+'_image\')">';
+    html += '<button type="button" class="btn btn-outline-primary waves-effect waves-light" target="slider'+position+'_'+numNow+'_image" data-toggle="modal" data-target=".media-modal-xl" onclick="go(\'slider'+position+'_'+numNow+'_image\')">';
     html += '<i class="uil uil-image font-size-18"></i>';
     html += '</button>';
     html += '</div>';
@@ -736,34 +763,42 @@ function slider3Item(position, numNow, data1 = '', data2 = '', data3 = '', data4
         data4 = '';
     }
 
-    html += '<img class="slider'+position+'_'+numNow+'_imageA" target="slider'+position+'_'+numNow+'_image" data-toggle="modal" data-target=".bs-example-modal-xl" src="'+dataSrc+'" width="100%" onclick="go(\'slider'+position+'_'+numNow+'_image\')">';
+    if(data5 == null || data5 == '')
+    {
+        data5 = '';
+    }
+
+    html += '<img class="slider'+position+'_'+numNow+'_imageA" target="slider'+position+'_'+numNow+'_image" data-toggle="modal" data-target=".media-modal-xl" src="'+dataSrc+'" width="100%" onclick="go(\'slider'+position+'_'+numNow+'_image\')">';
     html += '<input type="text" id="slider'+position+'_'+numNow+'_image" name="data[slider'+position+'_'+numNow+'_image]" value="'+data1+'" hidden>';
     html += '</div>';
     html += '</div>';
 
-    // html += '<div class="form-group mb-4">';
-    // html += '<label for="billing-name">文字</label>';
-    // html += '<input type="text" class="form-control" id="slider'+position+'_'+numNow+'_text" name="data[slider'+position+'_'+numNow+'_text]" placeholder="" value="'+data2+'">';
-    // html += '</div>';
+    html += '<div class="row image-link">';
+    html += '<label for="title" class="col-sm-2 col-form-label">说明</label>';
+    html += '<div class="col-sm-10">';
+    // html += '<textarea rows="3" class="form-control" id="slider'+position+'_'+numNow+'_text1" name="data[slider'+position+'_'+numNow+'_text1]" placeholder="">'+data2+'</textarea>';
+    html += '<input type="text" class="form-control" id="slider'+position+'_'+numNow+'_text1" name="data[slider'+position+'_'+numNow+'_text1]" placeholder="" value="'+data2+'">';
+    html += '</div>';
+    html += '</div>';
 
     html += '<div class="row image-link">';
     html += '<label for="title" class="col-sm-2 col-form-label">文字1</label>';
     html += '<div class="col-sm-10">';
-    html += '<input type="text" class="form-control" id="slider'+position+'_'+numNow+'_text1" name="data[slider'+position+'_'+numNow+'_text1]" placeholder="" value="'+data2+'">';
+    html += '<textarea rows="3" class="form-control" id="slider'+position+'_'+numNow+'_text2" name="data[slider'+position+'_'+numNow+'_text2]" placeholder="">'+data3+'</textarea>';
     html += '</div>';
     html += '</div>';
 
     html += '<div class="row image-link">';
     html += '<label for="title" class="col-sm-2 col-form-label">文字2</label>';
     html += '<div class="col-sm-10">';
-    html += '<input type="text" class="form-control" id="slider'+position+'_'+numNow+'_text2" name="data[slider'+position+'_'+numNow+'_text2]" placeholder="" value="'+data3+'">';
+    html += '<textarea rows="3" class="form-control" id="slider'+position+'_'+numNow+'_text3" name="data[slider'+position+'_'+numNow+'_text3]" placeholder="">'+data4+'</textarea>';
     html += '</div>';
     html += '</div>';
 
     html += '<div class="row image-link">';
     html += '<label for="title" class="col-sm-2 col-form-label">链接</label>';
     html += '<div class="col-sm-10">';
-    html += '<input type="text" class="form-control" id="slider'+position+'_'+numNow+'_link" name="data[slider'+position+'_'+numNow+'_link]" placeholder="" value="'+data4+'">';
+    html += '<input type="text" class="form-control" id="slider'+position+'_'+numNow+'_link" name="data[slider'+position+'_'+numNow+'_link]" placeholder="" value="'+data5+'">';
     html += '</div>';
     html += '</div>';
 

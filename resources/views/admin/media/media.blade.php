@@ -70,9 +70,15 @@
                                 <div class="page-title-box d-flex align-items-center justify-content-between">
                                     <h4 class="mb-0">
                                         媒体 &nbsp;&nbsp; | &nbsp;&nbsp;
-                                        <span type="button" id="mediaAdd" class="mb-0 btn btn-outline-primary waves-effect waves-light uploadText">上传媒体</span>
+                                        <span type="button" id="mediaAdd" class="mb-0 btn btn-outline-primary waves-effect waves-light uploadText">
+                                            @if($setting_media_upload->status == 0)
+                                            上传
+                                            @else
+                                            取消
+                                            @endif
+                                        </span>
 
-                                            <span type="button" id="hideMediaCategory" class="mb-0 btn btn-outline-primary waves-effect waves-light mdiaCatText">隐藏媒体分类</span>
+                                            <span type="button" id="hideMediaCategory" class="mb-0 btn btn-outline-primary waves-effect waves-light mdiaCatText">隐藏小类</span>
                                         </span>
                                     </h4>
                                     
@@ -109,7 +115,7 @@
                                             <div>
 
                                                 <div class="form-group mb-4 mb-lg-0">
-                                                        <label>媒体分类</label>
+                                                        <label>媒体小类</label>
                                                         <select class="form-control custom-select" id="media_category" name="media_category">
                                                             @foreach($mediaCategories as $mediaCategory)
                                                             <option value="{{$mediaCategory->id}}">{{$mediaCategory->title}}</option>
@@ -197,14 +203,21 @@
                 
                                             <div class="col-md-6">
 
+                                                <div class="right">
+                                                    <i class="uil uil-table font-size-20"></i>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <i class="uil uil-align-justify font-size-20"></i>
+                                                </div>
+                                                
+
                                                 <!-- <div class="btn-group mr-2 mb-2 mb-sm-0 right">
                                                     <button type="button" class="btn btn-primary waves-light waves-effect dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                         更多 <i class="mdi mdi-dots-vertical ml-2"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
                                                         <span id="nestable-media">
-                                                            <span class="dropdown-item pointer" data-action="expand-all">扩展媒体分类</span>
-                                                            <span class="dropdown-item" data-action="collapse-all">折合媒体分类</span>
+                                                            <span class="dropdown-item pointer" data-action="expand-all">扩展媒体小类</span>
+                                                            <span class="dropdown-item" data-action="collapse-all">折合媒体小类</span>
                                                         </span>
                                                     </div>
                                                 </div> -->
@@ -223,7 +236,7 @@
                                                         </div>
                                                     </th> -->
                                                     <th scope="col">标题</th>
-                                                    <th scope="col">分类</th>
+                                                    <th scope="col">小类</th>
                                                     <th scope="col">大小</th>
                                                     <th scope="col">预览</th>
                                                     <th scope="col" style="width: 200px;">操作</th>
@@ -300,7 +313,7 @@
                                     <span id="nestable-media-categories">
 
                                         <button type="button" class="btn btn-primary btn-block waves-effect waves-light" data-toggle="modal" data-target="#addItem">
-                                            新增媒体分类
+                                            新增媒体小类
                                         </button>
 
                                         <button type="button" class="btn btn-outline-success btn-block waves-effect waves-light media-categories-expand-all" data-action="expand-all-media-categories">扩展</button>
@@ -361,7 +374,7 @@
                                         </div>
 
                                         <div class="col-md-6 row">
-                                            <label for="title" class="col-sm-2 col-form-label">媒体分类</label>
+                                            <label for="title" class="col-sm-2 col-form-label">媒体小类</label>
                                             <div class="col-sm-10">
                                                 <select class="form-control" id="editMediaCategory" name="editMediaCategory">
                                                     @foreach($mediaCategories as $mediaCategory)
@@ -473,9 +486,16 @@
         
         <script src="/resources/js/jquery.nestable.js"></script>
 
+        @if($setting_media_upload->status == 0)
+        <script>
+            $("#mediaUpload").hide();
+        </script>
+        @else
+        @endif
+
         <script>
             // Media Upload start
-            $('#mediaUpload').css('display', 'none');
+            // $('#mediaUpload').css('display', 'none');
 
             // $('.copy_link').click('click',function(){
 
@@ -509,12 +529,15 @@
             $(document).ready(function()
             {
                 $("#mediaAdd").click(function(){
-                    if($("#mediaUpload").css("display")=="none"){
+                    if($("#mediaUpload").css("display")=="none")
+                    {
+                        ajaxMediaUpload(1);
                         $("#mediaUpload").show();
-                        $(".uploadText").text("取消上传");
+                        $(".uploadText").text("取消");
                     }else{
+                        ajaxMediaUpload(0);
                         $("#mediaUpload").hide();
-                        $(".uploadText").text("上传媒体");
+                        $(".uploadText").text("上传");
                     }
                 });
 
@@ -522,16 +545,38 @@
                 {
                     if($("#MediaCategory").css("display")=="none"){
                         $("#MediaCategory").show();
-                        $(".mdiaCatText").text("隐藏媒体分类");
+                        $(".mdiaCatText").text("隐藏小类");
                         $(".sizeBox").toggleClass("col-lg-12");
                     }else{
                         $("#MediaCategory").hide();
-                        $(".mdiaCatText").text("显示媒体分类");
+                        $(".mdiaCatText").text("显示小类");
                         $(".sizeBox").toggleClass("col-lg-12");
                     }
                 });
             });
             // Media Upload end
+
+            function ajaxMediaUpload(status)
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/admin/media_upload/status",
+                    data: { 
+                        status: status,
+                        updateKey: 'updateAEzBQMmYg1asfsd@#$%%%dsfdsASDFDSFS1888111Media',
+                        updateKey1: 'update111eAEzBdf#@$#vddds!@$#$#@$aaaASDFDSF111111333gq111Media',
+                    },
+                    cache : false,
+                    success: function(data)
+                    {
+                        // console.log(data);
+
+                    } ,error: function(xhr, status, error) 
+                    {
+                        alert(error);
+                    },
+                });
+            }
 
             function mediaEdit()
             {
@@ -550,7 +595,7 @@
                     cache : false,
                     success: function(data)
                     {
-                        console.log(data);
+                        // console.log(data);
 
                         location.reload();
 
@@ -588,7 +633,7 @@
                         cache : false,
                         success: function(data)
                         {
-                            console.log(data);
+                            // console.log(data);
                             location.reload();
                             // $("tr[media_id='" + id +"']").remove();
                             // window.location.replace("/admin/media");

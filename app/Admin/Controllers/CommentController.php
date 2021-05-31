@@ -2,84 +2,118 @@
 
 namespace App\Admin\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use \App\Models\BUser;
 use \App\Models\BComment;
+use \App\Models\BPostCategory;
 
 class CommentController extends Controller
 {
-	// 权限列表页面
-	public function index()
-	{
-		$comments = BComment::paginate(20);
+    // 设计目标：实现以首发评论数为依据的分页功能。避免需要获取评论整张表的数据后才组合成目标数组。
+    // 无限分级评论采用【单表+双parent】设计。parent=0为首发评论，parent>0,parent_reply=0为首发评论第一条回复，parent>0,parent_reply>0为首发评论第二条及之后的评论。
+    public function comments($status)
+    {
+        $bdata = array();
+        $bdata['status'] = $status;
 
-		return view("admin.comment.index", compact('comments'));
-	}
+        // 以首发评论为依据实现分页功能
+        // status，0未审核，1已审核，2被举报
+        if($status == 'all')
+        {
+            $items = BComment::where('parent', 0)->orderBy('created_at', 'desc')->paginate(5);
+        } elseif ($status == 'uncheck')
+        {
+            $items = BComment::where('parent', 0)->where('status', 0)->orderBy('created_at', 'desc')->paginate(5);
+        } elseif ($status == 'approve')
+        {
+            $items = BComment::where('parent', 0)->where('status', 1)->orderBy('created_at', 'desc')->paginate(5);
+        } elseif ($status == 'report')
+        {
+            $items = BComment::where('parent', 0)->where('report', 1)->orderBy('created_at', 'desc')->paginate(5);
+        } else
+        {
+            return redirect('/admin/comments/all');
+        }
+
+        $bdata['items'] = $items;
+
+        $bdata['content'] = 'yes';
+        if(empty($items[0]))
+        {
+            $bdata['content'] = 'no';
+        }
+
+        $bdata['comments'] = $this->commentArray($items);
+
+        return view("admin.comment.index", compact('bdata'));
+    }
+
+    public function commentArray($items)
+    {
+        $comments = array();
+        $i = 0;
+        foreach ($items as $comment)
+        {
+            $comments[$i] = $comment;
+            $i++;
+
+            // 首发评论第一条回复
+            $countCom = BComment::where('parent', $comment->id)->orderBy('created_at', 'desc');
+            if($countCom->count() > 0)
+            {
+                $com = $countCom->get();
+
+                foreach ($com as $com)
+                {
+                    $comments[$i] = $com;
+                    $i++;
+                }
+            }
+        }
+
+        return $comments;
+    }
 
     public function add()
     {
         return view("admin.comment.add");
     }
 
-	// 创建权限实际行为
-	public function create()
-	{
-		$this->validate(request(), [
-			'title' => 'required|min:1'
-		]);
+    public function check()
+    {
+        $data = array();
+        $data['status'] = 'Fail';
 
-		BPermission::create([
-            'title' => request('title'),
-            'description' => request('description'),
-        ]);
-
-		return back();
-	}
-
-	public function update()
-	{
-		$this->validate(request(), [
-            'title' => 'required',
-        ]);
-
-		// $this->authorize('update_note', $note);
-
-        $updateKey = 'upda1tebAEzsBQAMAaadfa1aFjsaaDssfjHI0qGFcdsf33Sss1S3UpdaFsteM2enu';
-        $updateKey1 = 'u1pAdaateAEzdBSQaMASsmaYScDgsrjbdjHFaSsI0ga3fqF33F3U1pfdSSaatefM3enu';
-
-        if ( request('updateKey') == $updateKey && request('updateKey1') == $updateKey1 )
+        $checkKey = 'checkVkVm1sdss%……&（……&**（lcI0003Comment';
+        if ( request('checkKey') == $checkKey )
         {
-            BPermission::where( 'id', request('id') )->first()->update([
-                'title' => request('title'),
-                'description' => request('description'),
+            BComment::where( 'id', request('id') )->update([
+                'status' => request('status'),
             ]);
+
+            $data['status'] = request('status');
         }
 
-		$data = array();
-		$data['id']    = request('id');
-		$data['title'] = request('title');
-		$data['description'] = request('description');
-
-		return $data;
-	}
+        return $data;
+    }
 
     public function delete()
     {
-        $BPermission = BPermission::findOrFail(request('id'));
+        $deleteKey = 'del1eteVkVm1$#&(&(&(**)_)()(5678bsInZhb2HVlcI0003deleteComment';
 
-        $deleteKey = 'del1eteVkVm1aPU2xXNQXdyYTQ1PSID1ETaf5678bsInZhb2HVlcI0003deleteM1enu';
-        $deleteKey1 = 'dele1teNJcV1888AaRHp1NkxadgfnPT0iLC24678J12YW3dx1ZSI6000bdeleteM2enu';
-
-        if ( request('deleteKey') == $deleteKey && request('deleteKey1') == $deleteKey1 )
+        if ( request('deleteKey') == $deleteKey )
         {
-            $BPermissionRole = BPermissionRole::where('permission_id', request('id'));
+            $children = BComment::where('parent', request('id'));
 
-            if($BPermissionRole->count() > 0 )
+            if($children->count() > 0 )
             {
-                $BPermissionRole->delete();
+                $children->delete();
             }
 
             // 事务处理
-            if($BPermission->delete())
+            $BComment = BComment::findOrFail(request('id'));
+
+            if($BComment->delete())
             {
                 return 'delete';
             }

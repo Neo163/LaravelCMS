@@ -36,21 +36,21 @@
         
             <div class="login-user">
                 <div class="icon">
-                    <img src="/admin/login1/images/user_icon_copy.png" alt="">
+                    <img src="/admin/login1/image/user_icon_copy.png" alt="">
                 </div>
-                <input type="text" name="name" placeholder="用户名" autocomplete="off" value="test1">
+                <input type="text" name="name" placeholder="用户名" autocomplete="off" value="">
             </div>
             <br/>
             <div class="login-pwd">
                 <div class="icon">
-                    <img src="/admin/login1/images/lock_icon_copy.png" alt="">
+                    <img src="/admin/login1/image/lock_icon_copy.png" alt="">
                 </div>
-                <input type="password" name="password" placeholder="密码" autocomplete="off" value="123456">
+                <input type="password" name="password" placeholder="密码" autocomplete="off" value="">
             </div>
 
             <!-- <div class="login-yan">
                 <div class="icon">
-                    <img src="/admin/login1/images/key.png" alt="">
+                    <img src="/admin/login1/image/key.png" alt="">
                 </div>
                 <input type="text" name="pwd" placeholder="验证码" autocomplete="off" value="">
             </div> -->

@@ -75,7 +75,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="uil-wrench"></i>
+                        <i class="uil-cog"></i>
                         <span>设置</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -86,32 +86,19 @@
                 
                 <li class="menu-title">模块</li>
 
+                @can("menu")
                 @if(substr($_SERVER['REQUEST_URI'] , 0 , 12) == '/admin/menu/')
-                <li class="mm-active">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect mm-active">
+                <li class="mm-active"><a href="/admin/menus" class="active">
                 @else
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <li><a href="/admin/menus">
                 @endif
-                        <i class="uil-cube"></i>
-                        <span>通用</span>
+                        <i class="uil-bars"></i>
+                        <span>菜单</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
-
-                        @can("menu")
-                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 12) == '/admin/menu/')
-                        <li class="mm-active"><a href="/admin/menus" class="active">
-                        @else
-                        <li><a href="/admin/menus">
-                        @endif
-                        菜单</a></li>
-                        @endcan
-
-                        <!-- <li><a href="/admin/google/analysis">Google分析</a></li> -->
-                    </ul>
                 </li>
+                @endcan
 
-                @if(substr($_SERVER['REQUEST_URI'] , 0 , 12) == '/admin/post/')
+                @if(substr($_SERVER['REQUEST_URI'] , 0 , 12) == '/admin/post/' && $_SERVER['REQUEST_URI'] != '/admin/post/type/add/1' && $_SERVER['REQUEST_URI'] != '/admin/post/type/add/1?editor=2' && substr($_SERVER['REQUEST_URI'] , 0 , 24) != '/admin/post/type/edit/1/' )
                 <li class="mm-active">
                     <a href="javascript: void(0);" class="has-arrow waves-effect mm-active">
                 @else
@@ -123,41 +110,68 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
 
-                        <li><a href="/admin/posts/types">类别</a></li>
+                        @if( ( substr($_SERVER['REQUEST_URI'] , 0 , 13) == '/admin/posts' || substr($_SERVER['REQUEST_URI'] , 0 , 18) == '/admin/posts/type/' ) 
+                        && substr($_SERVER['REQUEST_URI'] , 0 , 24) != '/admin/post/type/edit/1/' 
+                        && substr($_SERVER['REQUEST_URI'] , 0 , 19) != '/admin/posts/type/1' )
+                            @if($_SERVER['REQUEST_URI'] == '/admin/post/type/add/1')
+                            <li><a href="/admin/posts/type/2">
+                            @else
+                            <li class="mm-active"><a href="/admin/posts/type/2" class="active">
+                            @endif
+                        @else
+                        <li><a href="/admin/posts/type/2">
+                        @endif
+                        循环页+大类</a></li>
 
-                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 13) == '/admin/posts' || substr($_SERVER['REQUEST_URI'] , 0 , 17) == '/admin/post/type/')
+                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 29) == '/admin/posts/categories/type/')
+                        <li class="mm-active"><a href="/admin/posts/categories/type/2" class="active">
+                        @else
+                        <li><a href="/admin/posts/categories/type/2">
+                        @endif
+                        小类+大类</a></li>
+
+                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 23) == '/admin/posts/tags/type/')
+                        <li class="mm-active"><a href="/admin/posts/tags/type/2" class="active">
+                        @else
+                        <li><a href="/admin/posts/tags/type/2">
+                        @endif
+                        标签+大类</a></li>
+
+                        <li><a href="/admin/posts/types">大类</a></li>
+                        
+                    </ul>
+                </li>
+
+                @if(substr($_SERVER['REQUEST_URI'] , 0 , 24) == '/admin/post/type/edit/1/')
+                <li class="mm-active">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect mm-active">
+                @else
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                @endif
+                        <i class="uil-layer-group"></i>
+                        <span>专题页</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+
+                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 24) == '/admin/post/type/edit/1/')
                         <li class="mm-active"><a href="/admin/posts/type/1" class="active">
                         @else
                         <li><a href="/admin/posts/type/1">
                         @endif
-                        循环页+类别</a></li>
+                        专题页</a></li>
 
-                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 29) == '/admin/posts/categories/type/')
-                        <li class="mm-active"><a href="/admin/posts/categories/type/1" class="active">
+                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 15) == '/admin/page/add')
+                        <li class="mm-active"><a href="/admin/post/type/add/1" class="active">
                         @else
-                        <li><a href="/admin/posts/categories/type/1">
+                        <li><a href="/admin/post/type/add/1">
                         @endif
-                        分类+类别</a></li>
-
-                        @if(substr($_SERVER['REQUEST_URI'] , 0 , 23) == '/admin/posts/tags/type/')
-                        <li class="mm-active"><a href="/admin/posts/tags/type/1" class="active">
-                        @else
-                        <li><a href="/admin/posts/tags/type/1">
-                        @endif
-                        标签+类别</a></li>
-
-                        <!-- @if(substr($_SERVER['REQUEST_URI'] , 0 , 15) == '/admin/post/add')
-                        <li class="mm-active"><a href="/admin/post/add" class="active">
-                        @else
-                        <li><a href="/admin/post/add">
-                        @endif
-                        新建循环页</a></li> -->
+                        新建专题页</a></li>
                         
-                        <!-- <li><a href="/admin/posts/templates">模板</a></li> -->
                     </ul>
                 </li>
 
-                @if(substr($_SERVER['REQUEST_URI'] , 0 , 12) == '/admin/page/')
+                <!-- @if(substr($_SERVER['REQUEST_URI'] , 0 , 12) == '/admin/page/')
                 <li class="mm-active">
                     <a href="javascript: void(0);" class="has-arrow waves-effect mm-active">
                 @else
@@ -184,6 +198,13 @@
                         新建专题页</a></li>
                         
                     </ul>
+                </li> -->
+
+                <li>
+                    <a href="/admin/comments/uncheck" class="waves-effect">
+                        <i class="uil-align-left-justify"></i>
+                        <span>评论</span>
+                    </a>
                 </li>
 
                 @if(substr($_SERVER['REQUEST_URI'] , 0 , 16) == '/admin/template/')
@@ -219,12 +240,12 @@
                     </a>
                 </li> -->
 
-                <!-- <li>
+                <li>
                     <a href="https://analytics.google.com/analytics/web/?authuser=1" target="_blank" class="waves-effect">
                         <i class="uil-signal-alt-3"></i>
                         <span>Google分析</span>
                     </a>
-                </li> -->
+                </li>
 
                 <li class="menu-title"></li>
 

@@ -40,20 +40,3 @@ function GetExtensionFileName(pathfilename)
 	var arrfn = fn.split("."); 
 	return arrfn[arrfn.length - 1]; 
 }
-
-function copy_link(copy_link, position)
-{
-	var link = window.location.host+copy_link;
-	var timestamp = (new Date()).valueOf();
-
-	if(link.substring(0,4) != 'http')
-	{
-		link = 'http://'+link;
-	}
-
-	$(position).after('<input id="urlText_'+timestamp+'" style="position:fixed;top:-200%;left:-200%;" type="text" value=' + link + '>');
-	$('#urlText_'+timestamp).select(); //选择对象
-	document.execCommand("Copy"); //执行浏览器复制命令
-
-	$('#copy-link').trigger("click");
-}

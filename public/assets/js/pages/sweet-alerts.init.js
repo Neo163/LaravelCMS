@@ -138,6 +138,15 @@ function(t) {
                 timer: 1500
             })
         }),
+        t("#upload-tips").click(function() {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "上传成功",
+                showConfirmButton: !1,
+                timer: 1500
+            })
+        }),
         t("#custom-padding-width-alert").click(function() {
             Swal.fire({
                 title: "Custom width, padding, background.",

@@ -27,15 +27,15 @@ class TemplateController extends Controller
         // post
     	if(request('id') == 1)
     	{
-    		$data = $this->frontEndTemplates('post');
-            $data['backEnd'] = BTemplate::where('b_templates_category', 1)->orderBy('created_at', 'asc')->get();
+    		$data = $this->frontEndTemplates('page');
+            $data['backEnd'] = BTemplate::where('b_templates_category', 2)->orderBy('created_at', 'asc')->get();
     	}
 
         // page
     	if(request('id') == 2)
     	{
-    		$data = $this->frontEndTemplates('page');
-            $data['backEnd'] = BTemplate::where('b_templates_category', 2)->orderBy('created_at', 'asc')->get();
+            $data = $this->frontEndTemplates('post');
+            $data['backEnd'] = BTemplate::where('b_templates_category', 1)->orderBy('created_at', 'asc')->get();
     	}
 
         return $data;

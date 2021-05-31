@@ -1,8 +1,8 @@
 <?php
 
 // 后台url，前序为creative
-Route::group(['prefix' => 'admin'], function(){
-
+Route::group(['prefix' => 'admin'], function()
+{
 	Route::get('/test', '\App\Admin\Controllers\DemoController@test');
 
 	// 登录 暂定一个login
@@ -92,8 +92,7 @@ Route::group(['prefix' => 'admin'], function(){
 			// Route::post("/post/type/{bPostType}/update", "\App\Admin\Controllers\PostController@update");
 			Route::post("/post/update/{bpost}", "\App\Admin\Controllers\PostController@update");
 
-			// Route::get("/post/edit/{bpost}", "\App\Admin\Controllers\PostController@edit");
-			
+			Route::post("/post/image/upload", "\App\Admin\Controllers\MediaController@imageUpload");
 		
 		// });
 
@@ -118,16 +117,6 @@ Route::group(['prefix' => 'admin'], function(){
 		
 		// });
 
-		// Route::group(['middleware' => 'can:page'], function()
-		// {
-			Route::get("/pages", "\App\Admin\Controllers\PageController@index");
-			Route::get("/page/add", "\App\Admin\Controllers\PageController@add");
-			Route::post("/page/create", "\App\Admin\Controllers\PageController@create");
-
-			Route::get("/page/edit/{bpage}", "\App\Admin\Controllers\PageController@edit");
-			Route::post("/page/update/{bpage}", "\App\Admin\Controllers\PageController@update");
-		// });
-
 		// Route::group(['middleware' => 'can:template'], function()
 		// {
 			Route::get("/templates", "\App\Admin\Controllers\TemplateController@template");
@@ -146,13 +135,20 @@ Route::group(['prefix' => 'admin'], function(){
 
 		// Route::group(['middleware' => 'can:comments'], function()
 		// {
-			Route::get("/comments", "\App\Admin\Controllers\CommentController@index");
+			Route::get("/comments/{status}", "\App\Admin\Controllers\CommentController@comments");
+			// Route::get("/comments/recycle", "\App\Admin\Controllers\CommentController@recycle");
 			Route::post("/comment/reply", "\App\Admin\Controllers\CommentController@reply");
 		
 		// });
 
 			// test
+			Route::get('/demo/{demo}', '\App\Admin\Controllers\DemoController@demo');
+			Route::get('/test/{test}', '\App\Admin\Controllers\TestController@test');
+
+			Route::get('/mail', '\App\Admin\Controllers\TestController@mailSend');
+
 			Route::get('/sorting', '\App\Admin\Controllers\DemoController@sorting_page');
+			Route::get('/proup_image', '\App\Admin\Controllers\DemoController@proup_image');
 
 	});
 

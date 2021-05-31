@@ -93,7 +93,7 @@
                                                   <tr>
                                                     <th scope="col">ID</th>
                                                     <th scope="col">标题</th>
-                                                    <th scope="col">分类</th>
+                                                    <th scope="col">小类</th>
                                                     <th scope="col" style="width: 200px;">操作</th>
                                                   </tr>
                                                 </thead>
@@ -196,7 +196,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-md-2 col-form-label">分类</label>
+                                <label class="col-md-2 col-form-label">小类</label>
                                 <div class="col-md-10">
                                     <select class="form-control" name="category" id="category">
                                         <option value="text">text</option>
@@ -244,7 +244,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-md-2 col-form-label">分类</label>
+                                <label class="col-md-2 col-form-label">小类</label>
                                 <div class="col-md-10">
                                     <select class="form-control" name="categoryEdit" id="categoryEdit">
                                         <option value="text">text</option>

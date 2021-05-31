@@ -50,14 +50,15 @@
                             <div class="col-12">
                                 <div class="page-title-box d-flex align-items-center justify-content-between">
                                     <h4 class="mb-0">
-                                        循环页分类 &nbsp;&nbsp; | &nbsp;&nbsp;
-                                        <span type="button" id="hidePostType" class="mb-0 btn btn-outline-primary waves-effect waves-light mdiaCatText">隐藏循环页类别</span>
+                                        循环页小类 - {{$bPostType->title}}
+                                        &nbsp;&nbsp; | &nbsp;&nbsp;
+                                        <span type="button" id="hidePostType" class="mb-0 btn btn-outline-primary waves-effect waves-light mdiaCatText">隐藏循环页大类</span>
                                     </h4>
 
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
                                             <li class="breadcrumb-item"><a href="/admin/dashboard">概览</a></li>
-                                            <li class="breadcrumb-item active">循环页分类</li>
+                                            <li class="breadcrumb-item active">循环页小类</li>
                                         </ol>
                                     </div>
 
@@ -97,12 +98,12 @@
                                                             </button>
                                                             <div class="dropdown-menu">
                                                                 <span id="nestable-posts-tag">
-                                                                    <span class="dropdown-item pointer" data-action="expand-all">扩展媒体分类</span>
-                                                                    <span class="dropdown-item pointer" data-action="collapse-all">折合媒体分类</span>
+                                                                    <span class="dropdown-item pointer" data-action="expand-all">扩展媒体小类</span>
+                                                                    <span class="dropdown-item pointer" data-action="collapse-all">折合媒体小类</span>
                                                                 </span>
                                                                 <span id="nestable-posts-type">
-                                                                    <span class="dropdown-item pointer" data-action="expand-all-types">扩展媒体类别</span>
-                                                                    <span class="dropdown-item pointer" data-action="collapse-all-teyps">折合媒体类别</span>
+                                                                    <span class="dropdown-item pointer" data-action="expand-all-types">扩展媒体大类</span>
+                                                                    <span class="dropdown-item pointer" data-action="collapse-all-teyps">折合媒体大类</span>
                                                                 </span>
                                                             </div> -->
                                                         </div>
@@ -140,7 +141,7 @@
                                     <span id="nestable-posts-types">
 
                                         <button type="button" class="btn btn-primary btn-block waves-effect waves-light add-posts-type" data-toggle="modal" data-target="#addPostType">
-                                            新增循环页类别
+                                            新增循环页大类
                                         </button>
 
                                         <button type="button" class="btn btn-outline-success btn-block waves-effect waves-light posts-types-expand-all" data-action="expand-all-types">扩展</button>
@@ -205,11 +206,13 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="title" class="col-sm-2 col-form-label">媒体分类</label>
+                                <label for="title" class="col-sm-2 col-form-label">循环页大类</label>
                                 <div class="col-sm-10">
                                   <select class="form-control" id="b_posts_type_id" name="b_posts_type_id">
                                     @foreach($bPostTypes as $bPostType)
-                                    <option value="{{$bPostType->id}}">{{$bPostType->title}}</option>
+                                        @if($bPostType->id > 1)
+                                        <option value="{{$bPostType->id}}">{{$bPostType->title}}</option>
+                                        @endif
                                     @endforeach                              
                                 </select>
                                 </div>
@@ -237,7 +240,7 @@
                   
                     <!-- Modal Header -->
                     <div class="modal-header">
-                      <h4 class="modal-title">新增循环页类别</h4>
+                      <h4 class="modal-title">新增循环页大类</h4>
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     
@@ -291,12 +294,12 @@
                     if($("#MediaCategory").css("display")=="none"){
                         $("#MediaCategory").show();
                         $("#nestable-posts-type").show();
-                        $(".mdiaCatText").text("隐藏循环页类别");
+                        $(".mdiaCatText").text("隐藏循环页大类");
                         $(".sizeBox").toggleClass("col-lg-12");
                     }else{
                         $("#MediaCategory").hide();
                         $("#nestable-posts-type").hide();
-                        $(".mdiaCatText").text("显示循环页类别");
+                        $(".mdiaCatText").text("显示循环页大类");
                         $(".sizeBox").toggleClass("col-lg-12");
                     }
                 });

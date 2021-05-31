@@ -123,7 +123,7 @@ $(document).ready(function()
   	{
 		var id = $(this).attr('id');
    
-		if(id == 1)
+		if(id == 1 || id == 2)
 		{
           	alert('不可删除默认分类');
           	return false;
@@ -211,7 +211,15 @@ function getPostType()
 		{
 			// console.log(data);
 
-			document.getElementById("get_post_type").innerHTML = get_post_type(data);
+			var i = 0;
+			var data1 = {};
+			for (var key in data)
+			{
+				data1[i] = data[key];
+				i++;
+			}
+
+			document.getElementById("get_post_type").innerHTML = get_post_type(data1);
 		}
     });
 }
@@ -226,39 +234,43 @@ function get_post_type(data, tag = 'dd-list')
 
   	for (var key in data) // foreach, 順次序
   	{
-		html += '<li class="dd-item dd3-item" data-id="'+data[key]['id']+'" > ';
-		html += '<div class="dd-handle dd3-handle"></div>';
-		html += '<div class="dd3-content">';
+  		if(data[key]['id'] != 1)
+  		{
+  			html += '<li class="dd-item dd3-item" data-id="'+data[key]['id']+'" > ';
+			html += '<div class="dd-handle dd3-handle"></div>';
+			html += '<div class="dd3-content">';
 
-		// html += '<a id="title_show'+data[key]['id']+'" class="titleText left" href="">'+data[key]['title']+'</a> ';
-		html += '<span id="title_show'+data[key]['id']+'" class="titleText left">'+data[key]['title']+'</span> ';
+			// html += '<span class="titleText left">ID: '+data[key]['id']+'&nbsp;&nbsp;|&nbsp;&nbsp;</span>';
+			
+			html += '<a id="title_show'+data[key]['id']+'" class="titleText left" href="/admin/posts/type/'+data[key]['id']+'">'+data[key]['title']+'</a> ';
 
-		if(data[key]['id'] == 1)
-		{
-			html += '<span class="first-id">默认</span>';
-		}
+			if(data[key]['id'] == 1 || data[key]['id'] == 2)
+			{
+				html += '<span class="first-id">默认</span>';
+			}
 
-		html += '<span class="span-right">';
+			html += '<span class="span-right">';
 
-		html += '<a class="delPostsType" id="'+data[key]['id']+'"><i class="uil uil-trash-alt font-size-18"></i></a>';
+			html += '<a class="delPostsType" id="'+data[key]['id']+'"><i class="uil uil-trash-alt font-size-18"></i></a>';
 
-		html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
-		html += '<a class="edit-posts-type" ';
-		html += 'id="'+data[key]['id']+'" ';
-		html += 'title="'+data[key]['title']+'" ';
-		html += 'data-toggle="modal" data-target="#addPostType">';
-		html += '<i class="uil uil-pen font-size-18"></i></a>';
+			html += '<a class="edit-posts-type" ';
+			html += 'id="'+data[key]['id']+'" ';
+			html += 'title="'+data[key]['title']+'" ';
+			html += 'data-toggle="modal" data-target="#addPostType">';
+			html += '<i class="uil uil-pen font-size-18"></i></a>';
 
-		html += '</span> ';
-		html += '</div>';
+			html += '</span> ';
+			html += '</div>';
 
-		if(data[key].hasOwnProperty("child"))
-		{
-		html += get_post_type(data[key]['child'], 'child');
-		}
+			if(data[key].hasOwnProperty("child"))
+			{
+			html += get_post_type(data[key]['child'], 'child');
+			}
 
-		html += "</li>";
+			html += "</li>";
+  		}
   	}
 
   	html += "</ol>";
@@ -275,7 +287,7 @@ function createpostsType(data)
 	html += '<div class="dd-handle dd3-handle"></div>';
 	html += '<div class="dd3-content">';
 
-	html += '<span id="title_show'+data[key]['id']+'" class="titleText left">'+data[key]['title']+'</span> ';
+	html += '<a href="/admin/posts/type/16" id="title_show'+data[key]['id']+'" class="titleText left">'+data[key]['title']+'</a> ';
 
 	if(data[key]['id'] == 1)
 	{

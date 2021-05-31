@@ -8,7 +8,6 @@ use \App\Models\BMenu;
 use \App\Models\BUser;
 use \App\Models\User;
 use \App\Models\BPost;
-use \App\Models\BPage;
 use \App\Models\BMedia;
 
 class IndexController extends Controller
@@ -19,8 +18,8 @@ class IndexController extends Controller
     	
     	$data['bUsersCount'] = BUser::count();
     	$data['usersCount'] = User::count();
-    	$data['bPost'] = BPost::count();
-    	$data['bPage'] = BPage::count();
+    	$data['bPost'] = BPost::where('b_posts_type_id', '>', 1)->count();
+    	$data['bPage'] = BPost::where('b_posts_type_id', 1)->count();
 
         $data['bMedia'] = BMedia::count();
         $bMediaSize = BMedia::sum('size_count');
