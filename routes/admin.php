@@ -1,6 +1,5 @@
 <?php
 
-// 后台url，前序为creative
 Route::group(['prefix' => 'admin'], function()
 {
 	Route::get('/test', '\App\Admin\Controllers\DemoController@test');
